@@ -8,30 +8,60 @@ class User(AbstractUser):
         return f"{self.username}"
 
 
-class UserMediaDataMixin:
-    rate = models.DecimalField(null=True)
-    status = models.CharField(choices=["watching", "want to watch", "dropped", "finished"])
-    comment = models.TextField()
+class UserMovieData(models.Model):
+    class Status(models.TextChoices):
+        watching = "1", "watching"
+        want_to_watch = "2", "want to watch"
+        dropped = "3", "dropped"
+        finished = "4", "finished"
 
-
-class UserMovieData(models.Model, UserMediaDataMixin):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     movie = models.ForeignKey("Movie", on_delete=models.CASCADE)
+    rate = models.DecimalField(null=True, decimal_places=2, max_digits=3)
+    status = models.CharField(choices=Status.choices, default=Status.want_to_watch, max_length=15)
+    comment = models.TextField(null=True, blank=True)
 
 
-class UserAnimeData(models.Model, UserMediaDataMixin):
+class UserAnimeData(models.Model):
+    class Status(models.TextChoices):
+        watching = "1", "watching"
+        want_to_watch = "2", "want to watch"
+        dropped = "3", "dropped"
+        finished = "4", "finished"
+
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     anime = models.ForeignKey("Anime", on_delete=models.CASCADE)
+    rate = models.DecimalField(null=True, decimal_places=2, max_digits=3)
+    status = models.CharField(choices=Status.choices, default=Status.want_to_watch, max_length=15)
+    comment = models.TextField(null=True, blank=True)
 
 
-class UserCartoonData(models.Model, UserMediaDataMixin):
+class UserCartoonData(models.Model):
+    class Status(models.TextChoices):
+        watching = "1", "watching"
+        want_to_watch = "2", "want to watch"
+        dropped = "3", "dropped"
+        finished = "4", "finished"
+
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     cartoon = models.ForeignKey("Cartoon", on_delete=models.CASCADE)
+    rate = models.DecimalField(null=True, decimal_places=2, max_digits=3)
+    status = models.CharField(choices=Status.choices, default=Status.want_to_watch, max_length=15)
+    comment = models.TextField(null=True, blank=True)
 
 
-class UserSeriesData(models.Model, UserMediaDataMixin):
+class UserSeriesData(models.Model):
+    class Status(models.TextChoices):
+        watching = "1", "watching"
+        want_to_watch = "2", "want to watch"
+        dropped = "3", "dropped"
+        finished = "4", "finished"
+
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     series = models.ForeignKey("Series", on_delete=models.CASCADE)
+    rate = models.DecimalField(null=True, decimal_places=2, max_digits=3)
+    status = models.CharField(choices=Status.choices, default=Status.want_to_watch, max_length=15)
+    comment = models.TextField(null=True, blank=True)
 
 
 class Genre(models.Model):
