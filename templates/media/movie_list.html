@@ -1,19 +1,17 @@
 {% extends "base.html" %}
+{% load query_transform %}
 {% block content %}
   <h1>Movies</h1>
-    <form method="get" action="">
-      {{ search_form.as_p }}
-      <input type="submit" value="🔍" class="btn btn-secondary">
-    </form>
-  <details>
-  <summary>Filter by Genre</summary>
-    <form method="get" action="">
-      <div style="column-count: 5">
+  <form method="get" action="">
+    {{ search_form.as_p }}
+    <details>
+    <summary>Filter by Genre</summary>
+    <div style="column-count: 5">
       {{ filter_form.as_p }}
-      </div>
-      <input type="submit" value="Filter">
-    </form>
-  </details>
+    </div>
+    </details>
+    <input type="submit" value="🔍" class="btn btn-secondary">
+  </form>
   <table>
   <tr>
     <th>
