@@ -31,10 +31,13 @@
     {% for movie in movie_list %}
       <tr>
         <th>
-          {{ movie.title }}
+          <a href="{% url 'media:movie-detail' movie.id %}">{{ movie.title }}</a>
         </th>
         <th>
-          {{ movie.genres.all }}
+          {% for genre in movie.genre.all  %}
+          {{ genre }}
+          {% empty %}
+          {% endfor %}
         </th>
         <th>
           {{ movie.year_released }}
