@@ -1,4 +1,18 @@
 <ul>
+  {% if user.is_authenticated %}
+    <li>User:{{ user.get_username }}</li>
+    <li>
+      <form method="post" action="{% url 'logout'%}">
+        {% csrf_token %}
+        <input type="submit" value="Logout">
+      </form>
+    </li>
+  {% else %}
+    <li><a href="{% url 'login'%}">Login</a></li>
+    <li><a href="{% url "media:user-create" %}">Sign in</a></li>
+  {% endif %}
+
+  <br>
   <li>
     <a href="{% url 'media:index' %}">Home</a>
   </li>

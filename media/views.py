@@ -1,10 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
-from media.forms import UserMovieDataForm
+from media.forms import UserMovieDataForm, NewUserCreationForm
 from media.models import Movie, Anime, Series, Cartoon, User, UserMovieData
 
 
@@ -24,7 +25,13 @@ def index(request: HttpRequest) -> HttpResponse:
     return render(request, "media/index.html", context=context)
 
 
-class UserMovieListView(generic.ListView):
+class UserCreateView(generic.CreateView):
+    model = User
+    form_class = NewUserCreationForm
+    template_name = "registration/user_form.html"
+
+
+class UserMovieListView(generic.ListView, LoginRequiredMixin):
     model = UserMovieData
     paginate_by = 50
     template_name = "media/user_movie_list.html"
@@ -34,16 +41,16 @@ class UserMovieListView(generic.ListView):
         return UserMovieData.objects.filter(user_id=user.id)
 
 
-class MovieListView(generic.ListView):
+class MovieListView(generic.ListView, LoginRequiredMixin):
     model = Movie
     paginate_by = 50
 
 
-class MovieDetailView(generic.DetailView):
+class MovieDetailView(generic.DetailView, LoginRequiredMixin):
     model = Movie
 
 
-class MovieUpdateView(generic.UpdateView):
+class MovieUpdateView(generic.UpdateView, LoginRequiredMixin):
     model = Movie
     fields = ["year_released", "description", "genre"]
 
@@ -69,6 +76,7 @@ def update_user_movie_data_view(request: HttpRequest, pk: int) -> HttpResponse:
     return render(request, 'media/user_movie_data_form.html', {'form': form, 'movie': movie})
 
 
+@login_required
 def add_movie(request: HttpRequest, pk: int) -> HttpResponse:
     user = User.objects.get(id=request.user.id)
     if Movie.objects.get(id=pk) in user.movies.all():
