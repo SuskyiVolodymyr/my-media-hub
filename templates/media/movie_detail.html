@@ -1,4 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>{{ movie.title }}</h1>
+  <h1>{{ movie.title }}
+  <a href="{% url 'media:movie-update' movie.id %}">Update</a>
+  </h1>
+  <p>Year of release: {{ movie.year_released }}</p>
+  <p>Genres: 
+    {% for genre in movie.genre.all %}
+      {{ genre }}
+    {% endfor %}
+  </p>
+  <p>Description: 
+    {% if movie.description %}
+      {{ movie.description }}</p>
+    {% else %}
+      No description
+    {% endif %}
+  
 {% endblock %}

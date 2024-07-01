@@ -1,64 +1,54 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>Movies
-  <a href="{% url 'media:movie-list' %}">Add new movies</a>
+    <a href="{% url 'media:movie-list' %}">Add new movies</a>
   </h1>
   <table>
-  <tr>
-    <th>
-      Title
-    </th>
-    <th>
-      Genres
-    </th>
-    <th>
-      Year of release
-    </th>
-    <th>
-      Rate
-    </th>
-    <th>
-      Status
-    </th>
-    <th>
-      Comment
-    </th>
-    <th>
-      Update
-    </th>
-    <th>
-      Remove
-    </th>
-  </tr>
-  {% if usermoviedata_list %}
-    {% for movie_data in usermoviedata_list %}
-      <tr>
-        <th>
-          <a href="{% url 'media:movie-detail' movie_data.movie.id %}">{{ movie_data.movie.title }}</a>
-        </th>
-        <th>
-          {{ movie_data.genres.all }}
-        </th>
-        <th>
-          {{ movie_data.movie.year_released }}
-        </th>
-        <th>
-          {% if movie_data.rate %}{{ movie_data.rate }}{% else %}{% endif %}
-        </th>
-        <th>
-          {{ movie_data.get_status_display }}
-        </th>
-        <th>
-          {% if movie_data.comment %}{{ movie_data.comment }}{% else %}{% endif %}
-        </th>
-        <th>
-          <a href="{% url 'media:user-movie-data-update' movie_data.movie.id%}">Update</a>
-        </th>
-        <th>
-          <a href="{% url 'media:movie-add' movie_data.movie.id %}">Remove</a>
-        </th>
-      </tr>
-    {% endfor %}
-  {% endif %}
+    <tr>
+      <th>
+        Title
+      </th>
+      <th>
+        Rate
+      </th>
+      <th>
+        Status
+      </th>
+      <th>
+        Comment
+      </th>
+      <th>
+        Update
+      </th>
+      <th>
+        Remove
+      </th>
+    </tr>
+    {% if usermoviedata_list %}
+      {% for movie_data in usermoviedata_list %}
+        <tr>
+          <th>
+            <a href="{% url 'media:movie-detail' movie_data.movie.id %}">{{ movie_data.movie.title }}</a>
+          </th>
+          <th>
+            {% if movie_data.rate %}
+              {{ movie_data.rate }}
+            {% endif %}
+          </th>
+          <th>
+            {{ movie_data.get_status_display }}
+          </th>
+          <th>
+            {% if movie_data.comment %}{{ movie_data.comment }}{% else %}{% endif %}
+          </th>
+          <th>
+            <a href="{% url 'media:user-movie-data-update' movie_data.movie.id %}">Update</a>
+          </th>
+          <th>
+            <a href="{% url 'media:movie-add' movie_data.movie.id %}">Remove</a>
+          </th>
+        </tr>
+      {% endfor %}
+    {% endif %}
   </table>
 {% endblock %}

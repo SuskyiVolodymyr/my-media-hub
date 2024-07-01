@@ -43,6 +43,15 @@ class MovieDetailView(generic.DetailView):
     model = Movie
 
 
+class MovieUpdateView(generic.UpdateView):
+    model = Movie
+    fields = ["year_released", "description", "genre"]
+
+    def get_success_url(self):
+        movie_id = self.object.id
+        return reverse_lazy("media:movie-detail", kwargs={"pk": movie_id})
+
+
 @login_required
 def update_user_movie_data_view(request: HttpRequest, pk: int) -> HttpResponse:
     user = request.user

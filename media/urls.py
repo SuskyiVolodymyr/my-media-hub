@@ -7,6 +7,7 @@ from media.views import (
     add_movie,
     MovieDetailView,
     update_user_movie_data_view,
+    MovieUpdateView,
 )
 
 urlpatterns = [
@@ -16,6 +17,8 @@ urlpatterns = [
     path("movies/<int:pk>/add_movie", add_movie, name="movie-add"),
     path("user_movie_data/<int:pk>/update/", update_user_movie_data_view, name="user-movie-data-update"),
     path("movie/<int:pk>/detail/", MovieDetailView.as_view(), name="movie-detail"),
+    path("movie/<int:pk>/update/", MovieUpdateView.as_view(), name="movie-update"),
+
 ]
 
 app_name = "media"
