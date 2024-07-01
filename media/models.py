@@ -71,10 +71,19 @@ class Genre(models.Model):
         return self.name
 
 
-class Movie(models.Model):
+class MediaDescription(models.Model):
     title = models.CharField(max_length=255)
-    genre = models.ManyToManyField(Genre, related_name="movies")
     year_released = models.IntegerField(null=True)
+    seasons = models.IntegerField(null=True)
+    episodes = models.IntegerField(null=True)
+    description = models.TextField(null=True, blank=True)
+
+    class Meta:
+        abstract = True
+
+
+class Movie(MediaDescription):
+    genre = models.ManyToManyField(Genre, related_name="movies")
     user = models.ManyToManyField(get_user_model(), through=UserMovieData, related_name="movies")
 
     class Meta:
@@ -84,12 +93,8 @@ class Movie(models.Model):
         return self.title
 
 
-class Series(models.Model):
-    title = models.CharField(max_length=255)
+class Series(MediaDescription):
     genre = models.ManyToManyField(Genre, related_name="series")
-    seasons = models.IntegerField(null=True)
-    episodes = models.IntegerField(null=True)
-    year_released = models.IntegerField(null=True)
     user = models.ManyToManyField(get_user_model(), through=UserSeriesData, related_name="series")
 
     class Meta:
@@ -100,12 +105,8 @@ class Series(models.Model):
         return self.title
 
 
-class Anime(models.Model):
-    title = models.CharField(max_length=255)
+class Anime(MediaDescription):
     genre = models.ManyToManyField(Genre, related_name="anime")
-    seasons = models.IntegerField(null=True)
-    episodes = models.IntegerField(null=True)
-    year_released = models.IntegerField(null=True)
     user = models.ManyToManyField(get_user_model(), through=UserAnimeData, related_name="anime")
 
     class Meta:
@@ -116,12 +117,8 @@ class Anime(models.Model):
         return self.title
 
 
-class Cartoon(models.Model):
-    title = models.CharField(max_length=255)
+class Cartoon(MediaDescription):
     genre = models.ManyToManyField(Genre, related_name="cartoons")
-    seasons = models.IntegerField(null=True)
-    episodes = models.IntegerField(null=True)
-    year_released = models.IntegerField(null=True)
     user = models.ManyToManyField(get_user_model(), through=UserCartoonData, related_name="cartoons")
 
     class Meta:
