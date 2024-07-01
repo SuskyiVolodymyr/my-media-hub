@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Movies</h1>
+  <table>
+  <tr>
+    <th>
+      Title
+    </th>
+    <th>
+      Genres
+    </th>
+    <th>
+      Year of release
+    </th>
+    <th>
+      Add/Delete
+    </th>
+  </tr>
+  {% if movie_list %}
+    {% for movie in movie_list %}
+      <tr>
+        <th>
+          {{ movie.title }}
+        </th>
+        <th>
+          {{ movie.genres.all }}
+        </th>
+        <th>
+          {{ movie.year_released }}
+        </th>
+        <th>
+          {% if movie in user.movies.all %}
+            <a href="{% url 'media:movie-add' movie.id %}">Remove from list</a>
+          {% else %}
+            <a href="{% url 'media:movie-add' movie.id %}">Add to list</a>
+          {% endif %}
+        </th>
+      </tr>
+    {% endfor %}
+  {% endif %}
+  </table>
+{% endblock %}
