@@ -7,8 +7,8 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 
-from media.forms import UserMovieDataForm, NewUserCreationForm
-from media.models import Movie, Anime, Series, Cartoon, User, UserMovieData
+from media.forms import UserMovieDataForm, NewUserCreationForm, MovieSearchForm, MovieFilterForm
+from media.models import Movie, Anime, Series, Cartoon, User, UserMovieData, Genre
 
 
 @login_required
@@ -56,14 +56,54 @@ class UserMovieListView(generic.ListView, LoginRequiredMixin):
     paginate_by = 50
     template_name = "media/user_movie_list.html"
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        title = self.request.GET.get("title", "")
+        context["search_form"] = MovieSearchForm(
+            initial={"title": title}
+        )
+        return context
+
     def get_queryset(self):
         user = User.objects.get(id=self.request.user.id)
-        return UserMovieData.objects.filter(user_id=user.id)
+        queryset = UserMovieData.objects.filter(user_id=user.id)
+        form = MovieSearchForm(self.request.GET)
+        if form.is_valid():
+            return queryset.filter(
+                movie__title__icontains=form.cleaned_data["title"]
+            )
+        return queryset
 
 
 class MovieListView(generic.ListView, LoginRequiredMixin):
     model = Movie
     paginate_by = 50
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_form = MovieSearchForm(self.request.GET)
+        filter_form = MovieFilterForm(self.request.GET)
+        context["search_form"] = search_form
+        context["filter_form"] = filter_form
+        context["genres"] = Genre.objects.all()
+        context["selected_genres"] = self.request.GET.getlist("genres")
+        return context
+
+    def get_queryset(self):
+        queryset = Movie.objects.prefetch_related("genre")
+        search_form = MovieSearchForm(self.request.GET)
+        filter_form = MovieFilterForm(self.request.GET)
+        if search_form.is_valid():
+            title = search_form.cleaned_data.get("title", "")
+            if title:
+                queryset = queryset.filter(
+                    title__icontains=title
+                )
+        if filter_form.is_valid():
+            selected_genres = filter_form.cleaned_data.get("genres", [])
+            if selected_genres:
+                queryset = queryset.filter(genre__in=selected_genres).distinct()
+        return queryset
 
 
 class MovieDetailView(generic.DetailView, LoginRequiredMixin):
