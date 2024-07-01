@@ -1,8 +1,10 @@
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.views import generic
 
 from media.forms import UserMovieDataForm, NewUserCreationForm
@@ -26,9 +28,27 @@ def index(request: HttpRequest) -> HttpResponse:
 
 
 class UserCreateView(generic.CreateView):
-    model = User
     form_class = NewUserCreationForm
     template_name = "registration/user_form.html"
+    success_url = reverse_lazy("media:index")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(self.request, user)
+        else:
+            messages.error(self.request, 'There was a problem logging you in. Please try again.')
+        return response
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            'There was an error with your submission. Please check the form and try again.'
+        )
+        return super().form_invalid(form)
 
 
 class UserMovieListView(generic.ListView, LoginRequiredMixin):

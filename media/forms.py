@@ -13,3 +13,4 @@ class UserMovieDataForm(forms.ModelForm):
 class NewUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
+        fields = ["username", "email", "password1", "password2"]
