@@ -1,7 +1,11 @@
+from abc import ABC, abstractmethod
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import models
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
@@ -9,7 +13,7 @@ from django.views import generic
 
 from media.forms import UserMovieDataForm, NewUserCreationForm, MediaSearchForm, MediaFilterForm, MovieOrderForm, \
     AnimeOrderForm, UserAnimeDataForm, StatusFilterForm
-from media.models import Movie, Anime, Series, Cartoon, User, UserMovieData, Genre, UserAnimeData
+from media.models import Movie, Anime, Series, Cartoon, User, UserMovieData, Genre, UserAnimeData, MediaDescription
 
 
 @login_required
@@ -52,154 +56,109 @@ class UserCreateView(generic.CreateView):
         return super().form_invalid(form)
 
 
-class UserMovieListView(generic.ListView, LoginRequiredMixin):
-    model = UserMovieData
+class UserMediaListView(generic.ListView, LoginRequiredMixin, ABC):
+    model = None
     paginate_by = 50
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        title = self.request.GET.get("title", "")
+        show_only = self.request.GET.get("show_only", "")
+        context["search_form"] = MediaSearchForm(
+            initial={"title": title}
+        )
+        context["show_only_form"] = StatusFilterForm(
+            initial={"show_only": show_only}
+        )
+        return context
+
+    @staticmethod
+    @abstractmethod
+    def media_title_filter(queryset: QuerySet, filter_by: str) -> QuerySet:
+        pass
+
+    def get_queryset(self):
+        user = User.objects.get(id=self.request.user.id)
+        queryset = self.model.objects.filter(user_id=user.id)
+        search_form = MediaSearchForm(self.request.GET)
+        status_filter_form = StatusFilterForm(self.request.GET)
+        if search_form.is_valid():
+            queryset = self.media_title_filter(queryset, search_form.cleaned_data["title"])
+        if status_filter_form.is_valid():
+            if status_filter_form.cleaned_data.get("show_only"):
+                queryset = queryset.filter(
+                    status=status_filter_form.cleaned_data.get("show_only")
+                )
+        return queryset
+
+
+class UserMovieListView(UserMediaListView):
+    model = UserMovieData
     template_name = "media/user_movie_list.html"
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        title = self.request.GET.get("title", "")
-        show_only = self.request.GET.get("show_only", "")
-        context["search_form"] = MediaSearchForm(
-            initial={"title": title}
-        )
-        context["show_only_form"] = StatusFilterForm(
-            initial={"show_only": show_only}
-        )
-        return context
-
-    def get_queryset(self):
-        user = User.objects.get(id=self.request.user.id)
-        queryset = UserMovieData.objects.filter(user_id=user.id)
-        search_form = MediaSearchForm(self.request.GET)
-        status_filter_form = StatusFilterForm(self.request.GET)
-        if search_form.is_valid():
-            queryset = queryset.filter(
-                movie__title__icontains=search_form.cleaned_data["title"]
-            )
-        if status_filter_form.is_valid():
-            if status_filter_form.cleaned_data.get("show_only"):
-                queryset = queryset.filter(
-                    status=status_filter_form.cleaned_data.get("show_only")
-                )
-        return queryset
+    @staticmethod
+    def media_title_filter(queryset: QuerySet, filter_by: str) -> QuerySet:
+        return queryset.filter(movie__title__icontains=filter_by)
 
 
-class UserAnimeListView(generic.ListView, LoginRequiredMixin):
+class UserAnimeListView(UserMediaListView):
     model = UserAnimeData
-    paginate_by = 50
     template_name = "media/user_anime_list.html"
 
+    @staticmethod
+    def media_title_filter(queryset: QuerySet, filter_by: str) -> QuerySet:
+        return queryset.filter(anime__title__icontains=filter_by)
+
+
+class MediaListView(generic.ListView, LoginRequiredMixin, ABC):
+    model = None
+    paginate_by = 50
+    order_form = None
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        title = self.request.GET.get("title", "")
-        show_only = self.request.GET.get("show_only", "")
-        context["search_form"] = MediaSearchForm(
-            initial={"title": title}
-        )
-        context["show_only_form"] = StatusFilterForm(
-            initial={"show_only": show_only}
-        )
+        search_form = MediaSearchForm(self.request.GET)
+        filter_form = MediaFilterForm(self.request.GET)
+        context["search_form"] = search_form
+        context["filter_form"] = filter_form
+        context["order_form"] = self.order_form(self.request.GET)
+        context["genres"] = Genre.objects.all()
+        context["selected_genres"] = self.request.GET.getlist("genres")
         return context
 
     def get_queryset(self):
-        user = User.objects.get(id=self.request.user.id)
-        queryset = UserAnimeData.objects.filter(user_id=user.id)
+        queryset = self.model.objects.prefetch_related("genre")
         search_form = MediaSearchForm(self.request.GET)
-        status_filter_form = StatusFilterForm(self.request.GET)
+        filter_form = MediaFilterForm(self.request.GET)
+        order_form = self.order_form(self.request.GET)
+
         if search_form.is_valid():
-            queryset = queryset.filter(
-                anime__title__icontains=search_form.cleaned_data["title"]
-            )
-        if status_filter_form.is_valid():
-            if status_filter_form.cleaned_data.get("show_only"):
+            title = search_form.cleaned_data.get("title", "")
+            if title:
                 queryset = queryset.filter(
-                    status=status_filter_form.cleaned_data.get("show_only")
+                    title__icontains=title
                 )
+        if filter_form.is_valid():
+            selected_genres = filter_form.cleaned_data.get("genres", [])
+            if selected_genres:
+                queryset = queryset.filter(genre__in=selected_genres).distinct()
+
+        if order_form.is_valid():
+            order = order_form.cleaned_data.get("order", "title")
+            if order:
+                queryset = queryset.order_by(order)
+
         return queryset
 
 
-class MovieListView(generic.ListView, LoginRequiredMixin):
+class MovieListView(MediaListView):
     model = Movie
-    paginate_by = 50
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        search_form = MediaSearchForm(self.request.GET)
-        filter_form = MediaFilterForm(self.request.GET)
-        order_form = MovieOrderForm(self.request.GET)
-        context["search_form"] = search_form
-        context["filter_form"] = filter_form
-        context["order_form"] = order_form
-        context["genres"] = Genre.objects.all()
-        context["selected_genres"] = self.request.GET.getlist("genres")
-        return context
-
-    def get_queryset(self):
-        queryset = Movie.objects.prefetch_related("genre")
-        search_form = MediaSearchForm(self.request.GET)
-        filter_form = MediaFilterForm(self.request.GET)
-        order_form = MovieOrderForm(self.request.GET)
-
-        if search_form.is_valid():
-            title = search_form.cleaned_data.get("title", "")
-            if title:
-                queryset = queryset.filter(
-                    title__icontains=title
-                )
-        if filter_form.is_valid():
-            selected_genres = filter_form.cleaned_data.get("genres", [])
-            if selected_genres:
-                queryset = queryset.filter(genre__in=selected_genres).distinct()
-
-        if order_form.is_valid():
-            order = order_form.cleaned_data.get("order", "title")
-            if order:
-                queryset = queryset.order_by(order)
-
-        return queryset
+    order_form = MovieOrderForm
 
 
-class AnimeListView(generic.ListView, LoginRequiredMixin):
+class AnimeListView(MediaListView):
     model = Anime
-    paginate_by = 50
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        search_form = MediaSearchForm(self.request.GET)
-        filter_form = MediaFilterForm(self.request.GET)
-        order_form = AnimeOrderForm(self.request.GET)
-        context["search_form"] = search_form
-        context["filter_form"] = filter_form
-        context["order_form"] = order_form
-        context["genres"] = Genre.objects.all()
-        context["selected_genres"] = self.request.GET.getlist("genres")
-        return context
-
-    def get_queryset(self):
-        queryset = Anime.objects.prefetch_related("genre")
-        search_form = MediaSearchForm(self.request.GET)
-        filter_form = MediaFilterForm(self.request.GET)
-        order_form = AnimeOrderForm(self.request.GET)
-
-        if search_form.is_valid():
-            title = search_form.cleaned_data.get("title", "")
-            if title:
-                queryset = queryset.filter(
-                    title__icontains=title
-                )
-        if filter_form.is_valid():
-            selected_genres = filter_form.cleaned_data.get("genres", [])
-            if selected_genres:
-                queryset = queryset.filter(genre__in=selected_genres).distinct()
-
-        if order_form.is_valid():
-            order = order_form.cleaned_data.get("order", "title")
-            if order:
-                queryset = queryset.order_by(order)
-
-        return queryset
+    order_form = AnimeOrderForm
 
 
 class MovieDetailView(generic.DetailView, LoginRequiredMixin):
@@ -252,20 +211,40 @@ class MovieDeleteView(generic.DeleteView, LoginRequiredMixin):
 
 
 @login_required
+def update_user_media_data(
+        request: HttpRequest,
+        user_media_data: any,
+        user_media_data_form: callable,
+        response: str,
+        template: str,
+        context: dict
+):
+    if request.method == 'POST':
+        form = user_media_data_form(request.POST, instance=user_media_data)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(response)
+    else:
+        form = user_media_data_form(instance=user_media_data)
+
+    return render(request, template, {"form": form, **context})
+
+
+@login_required
 def update_user_movie_data_view(request: HttpRequest, pk: int) -> HttpResponse:
     user = request.user
     movie = get_object_or_404(Movie, id=pk)
     user_movie_data = get_object_or_404(UserMovieData, user=user, movie=movie)
-
-    if request.method == 'POST':
-        form = UserMovieDataForm(request.POST, instance=user_movie_data)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse_lazy("media:user-movie-list"))
-    else:
-        form = UserMovieDataForm(instance=user_movie_data)
-
-    return render(request, 'media/user_movie_data_form.html', {'form': form, 'movie': movie})
+    response = reverse_lazy("media:user-movie-list")
+    template = "media/user_movie_data_form.html"
+    return update_user_media_data(
+        request=request,
+        user_media_data=user_movie_data,
+        user_media_data_form=UserMovieDataForm,
+        response=response,
+        template=template,
+        context={"movie": movie}
+    )
 
 
 @login_required
@@ -273,16 +252,16 @@ def update_user_anime_data_view(request: HttpRequest, pk: int) -> HttpResponse:
     user = request.user
     anime = get_object_or_404(Anime, id=pk)
     user_anime_data = get_object_or_404(UserAnimeData, user=user, anime=anime)
-
-    if request.method == 'POST':
-        form = UserAnimeDataForm(request.POST, instance=user_anime_data)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse_lazy("media:user-anime-list"))
-    else:
-        form = UserAnimeDataForm(instance=user_anime_data)
-
-    return render(request, 'media/user_anime_data_form.html', {'form': form, 'anime': anime})
+    response = reverse_lazy("media:user-anime-list")
+    template = "media/user_anime_data_form.html"
+    return update_user_media_data(
+        request=request,
+        user_media_data=user_anime_data,
+        user_media_data_form=UserAnimeDataForm,
+        response=response,
+        template=template,
+        context={"anime": anime}
+    )
 
 
 @login_required

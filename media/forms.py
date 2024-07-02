@@ -1,45 +1,36 @@
+from abc import ABC
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from media.models import UserMovieData, User, Genre, UserAnimeData
 
 
-class UserMovieDataForm(forms.ModelForm):
+class UserMediaDataForm(forms.ModelForm):
+    rate = forms.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        required=False
+    )
+
+    def clean_rate(self):
+        rate = self.cleaned_data["rate"]
+        if rate is not None and not 0 <= rate <= 5:
+            raise forms.ValidationError("Rate must be between 0 and 5")
+
+        return rate
+
+
+class UserMovieDataForm(UserMediaDataForm):
     class Meta:
         model = UserMovieData
         fields = ["rate", "status", "comment"]
 
-    rate = forms.DecimalField(
-        max_digits=3,
-        decimal_places=2,
-        required=False
-    )
 
-    def clean_rate(self):
-        rate = self.cleaned_data["rate"]
-        if rate is not None and 0 <= rate <= 5:
-            raise forms.ValidationError("Rate must be between 0 and 5")
-
-        return rate
-
-
-class UserAnimeDataForm(forms.ModelForm):
+class UserAnimeDataForm(UserMediaDataForm):
     class Meta:
         model = UserAnimeData
         fields = ["rate", "status", "comment"]
-
-    rate = forms.DecimalField(
-        max_digits=3,
-        decimal_places=2,
-        required=False
-    )
-
-    def clean_rate(self):
-        rate = self.cleaned_data["rate"]
-        if rate is not None and 0 <= rate <= 5:
-            raise forms.ValidationError("Rate must be between 0 and 5")
-
-        return rate
 
 
 class NewUserCreationForm(UserCreationForm):
@@ -96,7 +87,12 @@ class MovieOrderForm(forms.Form):
 class AnimeOrderForm(forms.Form):
 
     order = forms.ChoiceField(
-        choices=(("title", "Title"), ("-year_released", "Year")),
+        choices=(
+            ("title", "Title"),
+            ("-year_released", "Year"),
+            ("-seasons", "Seasons"),
+            ("-episodes", "Episodes")
+        ),
         required=False,
         label="Sort by",
     )
