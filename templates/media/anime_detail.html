@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>{{ movie.title }}
-  <a href="{% url 'media:anime-update' movie.id %}">Update</a>
-  <a href="{% url 'media:anime-delete' movie.id %}">Delete</a>
+  <h1>{{ anime.title }}
+  <a href="{% url 'media:anime-update' anime.id %}">Update</a>
+  <a href="{% url 'media:anime-delete' anime.id %}">Delete</a>
   </h1>
   <p>Year of release: {{ anime.year_released }}</p>
   <p>Genres: 
