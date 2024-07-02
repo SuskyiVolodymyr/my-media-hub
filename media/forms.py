@@ -36,3 +36,12 @@ class MovieFilterForm(forms.Form):
         required=False,
         label=""
     )
+
+
+class MovieOrderForm(forms.Form):
+
+    order = forms.ChoiceField(
+        choices=(("title", "Title"), ("-year_released", "Year")),
+        required=False,
+        label="Sort by",
+    )

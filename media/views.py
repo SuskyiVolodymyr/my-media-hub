@@ -7,7 +7,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 
-from media.forms import UserMovieDataForm, NewUserCreationForm, MovieSearchForm, MovieFilterForm
+from media.forms import UserMovieDataForm, NewUserCreationForm, MovieSearchForm, MovieFilterForm, MovieOrderForm
 from media.models import Movie, Anime, Series, Cartoon, User, UserMovieData, Genre
 
 
@@ -83,8 +83,10 @@ class MovieListView(generic.ListView, LoginRequiredMixin):
         context = super().get_context_data(**kwargs)
         search_form = MovieSearchForm(self.request.GET)
         filter_form = MovieFilterForm(self.request.GET)
+        order_form = MovieOrderForm(self.request.GET)
         context["search_form"] = search_form
         context["filter_form"] = filter_form
+        context["order_form"] = order_form
         context["genres"] = Genre.objects.all()
         context["selected_genres"] = self.request.GET.getlist("genres")
         return context
@@ -93,6 +95,8 @@ class MovieListView(generic.ListView, LoginRequiredMixin):
         queryset = Movie.objects.prefetch_related("genre")
         search_form = MovieSearchForm(self.request.GET)
         filter_form = MovieFilterForm(self.request.GET)
+        order_form = MovieOrderForm(self.request.GET)
+
         if search_form.is_valid():
             title = search_form.cleaned_data.get("title", "")
             if title:
@@ -103,6 +107,12 @@ class MovieListView(generic.ListView, LoginRequiredMixin):
             selected_genres = filter_form.cleaned_data.get("genres", [])
             if selected_genres:
                 queryset = queryset.filter(genre__in=selected_genres).distinct()
+
+        if order_form.is_valid():
+            order = order_form.cleaned_data.get("order", "title")
+            if order:
+                queryset = queryset.order_by(order)
+
         return queryset
 
 
