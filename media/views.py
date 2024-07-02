@@ -4,16 +4,33 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import models
 from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 
-from media.forms import UserMovieDataForm, NewUserCreationForm, MediaSearchForm, MediaFilterForm, MovieOrderForm, \
-    AnimeOrderForm, UserAnimeDataForm, StatusFilterForm
-from media.models import Movie, Anime, Series, Cartoon, User, UserMovieData, Genre, UserAnimeData, MediaDescription
+from media.forms import (
+    UserMovieDataForm,
+    NewUserCreationForm,
+    MediaSearchForm,
+    MediaFilterForm,
+    MovieOrderForm,
+    AnimeOrderForm,
+    UserAnimeDataForm,
+    StatusFilterForm
+)
+from media.models import (
+    Movie,
+    Anime,
+    Series,
+    Cartoon,
+    User,
+    UserMovieData,
+    Genre,
+    UserAnimeData,
+    MediaDescription
+)
 
 
 @login_required
@@ -208,6 +225,11 @@ class AnimeCreateView(generic.CreateView, LoginRequiredMixin):
 class MovieDeleteView(generic.DeleteView, LoginRequiredMixin):
     model = Movie
     success_url = reverse_lazy("media:movie-list")
+
+
+class AnimeDeleteView(generic.DeleteView, LoginRequiredMixin):
+    model = Anime
+    success_url = reverse_lazy("media:anime-list")
 
 
 @login_required

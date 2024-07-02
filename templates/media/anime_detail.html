@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{ movie.title }}
+  <a href="{% url 'media:anime-update' movie.id %}">Update</a>
+  <a href="{% url 'media:anime-delete' movie.id %}">Delete</a>
+  </h1>
+  <p>Year of release: {{ anime.year_released }}</p>
+  <p>Genres: 
+    {% for genre in anime.genre.all %}
+      {{ genre }}
+    {% endfor %}
+  </p>
+  <p>Seasons: {{ anime.seasons }}</p>
+  <p>Episodes: {{ anime.episodes }}</p>
+  <p>Description: 
+    {% if anime.description %}
+      {{ anime.description }}</p>
+    {% else %}
+      No description
+    {% endif %}
+  
+{% endblock %}
