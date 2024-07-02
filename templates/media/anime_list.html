@@ -22,6 +22,12 @@
       Genres
     </th>
     <th>
+      Seasons
+    </th>
+    <th>
+      Episodes
+    </th>
+    <th>
       Year of release
     </th>
     <th>
@@ -39,6 +45,12 @@
           {{ genre }}
           {% empty %}
           {% endfor %}
+        </th>
+        <th>
+          {{ anime.seasons }}
+        </th>
+          <th>
+          {{ anime.episodes }}
         </th>
         <th>
           {{ anime.year_released }}

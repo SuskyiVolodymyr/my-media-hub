@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from media.forms import UserMovieDataForm, NewUserCreationForm, MediaSearchForm, MediaFilterForm, MovieOrderForm, \
-    AnimeOrderForm, UserAnimeDataForm
+    AnimeOrderForm, UserAnimeDataForm, StatusFilterForm
 from media.models import Movie, Anime, Series, Cartoon, User, UserMovieData, Genre, UserAnimeData
 
 
@@ -84,19 +84,29 @@ class UserAnimeListView(generic.ListView, LoginRequiredMixin):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         title = self.request.GET.get("title", "")
+        show_only = self.request.GET.get("show_only", "")
         context["search_form"] = MediaSearchForm(
             initial={"title": title}
+        )
+        context["show_only_form"] = StatusFilterForm(
+            initial={"show_only": show_only}
         )
         return context
 
     def get_queryset(self):
         user = User.objects.get(id=self.request.user.id)
         queryset = UserAnimeData.objects.filter(user_id=user.id)
-        form = MediaSearchForm(self.request.GET)
-        if form.is_valid():
-            return queryset.filter(
-                anime__title__icontains=form.cleaned_data["title"]
+        search_form = MediaSearchForm(self.request.GET)
+        status_filter_form = StatusFilterForm(self.request.GET)
+        if search_form.is_valid():
+            queryset = queryset.filter(
+                anime__title__icontains=search_form.cleaned_data["title"]
             )
+        if status_filter_form.is_valid():
+            if status_filter_form.cleaned_data.get("show_only"):
+                queryset = queryset.filter(
+                    status=status_filter_form.cleaned_data.get("show_only")
+                )
         return queryset
 
 

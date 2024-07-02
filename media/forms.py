@@ -35,6 +35,20 @@ class MediaSearchForm(forms.Form):
     )
 
 
+class StatusFilterForm(forms.Form):
+    show_only = forms.ChoiceField(
+        choices=(
+            ("", "All"),
+            ("1", "Watching"),
+            ("2", "Want to watch"),
+            ("3", "Dropped"),
+            ("4", "Finished"),
+        ),
+        required=False,
+        label="show only",
+    )
+
+
 class MediaFilterForm(forms.Form):
     genres = forms.ModelMultipleChoiceField(
         queryset=Genre.objects.all(),
