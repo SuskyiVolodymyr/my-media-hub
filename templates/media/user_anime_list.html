@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Anime
+    <a href="{% url 'media:anime-list' %}">Add new anime</a>
+  </h1>
+  <form method="get" action="">
+    {{ search_form.as_p }}
+    <input type="submit" value="🔍" class="btn btn-secondary">
+  </form>
+  <table>
+    <tr>
+      <th>
+        Title
+      </th>
+      <th>
+        Rate
+      </th>
+      <th>
+        Status
+      </th>
+      <th>
+        Comment
+      </th>
+      <th>
+        Update
+      </th>
+      <th>
+        Remove
+      </th>
+    </tr>
+    {% if useranimedata_list %}
+      {% for anime_data in useranimedata_list %}
+        <tr>
+          <th>
+            <a href="{% url 'media:anime-detail' anime_data.anime.id %}">{{ anime_data.anime.title }}</a>
+          </th>
+          <th>
+            {% if anime_data.rate %}
+              {{ anime_data.rate }}
+            {% endif %}
+          </th>
+          <th>
+            {{ anime_data.get_status_display }}
+          </th>
+          <th>
+            {% if anime_data.comment %}{{ anime_data.comment }}{% else %}{% endif %}
+          </th>
+          <th>
+            <a href="{% url 'media:user-anime-data-update' anime_data.anime.id %}">Update</a>
+          </th>
+          <th>
+            <a href="{% url 'media:anime-add' anime_data.anime.id %}">Remove</a>
+          </th>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
+{% endblock %}

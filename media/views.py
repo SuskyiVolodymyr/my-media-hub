@@ -7,8 +7,9 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 
-from media.forms import UserMovieDataForm, NewUserCreationForm, MovieSearchForm, MovieFilterForm, MovieOrderForm
-from media.models import Movie, Anime, Series, Cartoon, User, UserMovieData, Genre
+from media.forms import UserMovieDataForm, NewUserCreationForm, MediaSearchForm, MediaFilterForm, MovieOrderForm, \
+    AnimeOrderForm, UserAnimeDataForm
+from media.models import Movie, Anime, Series, Cartoon, User, UserMovieData, Genre, UserAnimeData
 
 
 @login_required
@@ -59,7 +60,7 @@ class UserMovieListView(generic.ListView, LoginRequiredMixin):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         title = self.request.GET.get("title", "")
-        context["search_form"] = MovieSearchForm(
+        context["search_form"] = MediaSearchForm(
             initial={"title": title}
         )
         return context
@@ -67,10 +68,34 @@ class UserMovieListView(generic.ListView, LoginRequiredMixin):
     def get_queryset(self):
         user = User.objects.get(id=self.request.user.id)
         queryset = UserMovieData.objects.filter(user_id=user.id)
-        form = MovieSearchForm(self.request.GET)
+        form = MediaSearchForm(self.request.GET)
         if form.is_valid():
             return queryset.filter(
                 movie__title__icontains=form.cleaned_data["title"]
+            )
+        return queryset
+
+
+class UserAnimeListView(generic.ListView, LoginRequiredMixin):
+    model = UserAnimeData
+    paginate_by = 50
+    template_name = "media/user_anime_list.html"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        title = self.request.GET.get("title", "")
+        context["search_form"] = MediaSearchForm(
+            initial={"title": title}
+        )
+        return context
+
+    def get_queryset(self):
+        user = User.objects.get(id=self.request.user.id)
+        queryset = UserAnimeData.objects.filter(user_id=user.id)
+        form = MediaSearchForm(self.request.GET)
+        if form.is_valid():
+            return queryset.filter(
+                anime__title__icontains=form.cleaned_data["title"]
             )
         return queryset
 
@@ -81,8 +106,8 @@ class MovieListView(generic.ListView, LoginRequiredMixin):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        search_form = MovieSearchForm(self.request.GET)
-        filter_form = MovieFilterForm(self.request.GET)
+        search_form = MediaSearchForm(self.request.GET)
+        filter_form = MediaFilterForm(self.request.GET)
         order_form = MovieOrderForm(self.request.GET)
         context["search_form"] = search_form
         context["filter_form"] = filter_form
@@ -93,9 +118,50 @@ class MovieListView(generic.ListView, LoginRequiredMixin):
 
     def get_queryset(self):
         queryset = Movie.objects.prefetch_related("genre")
-        search_form = MovieSearchForm(self.request.GET)
-        filter_form = MovieFilterForm(self.request.GET)
+        search_form = MediaSearchForm(self.request.GET)
+        filter_form = MediaFilterForm(self.request.GET)
         order_form = MovieOrderForm(self.request.GET)
+
+        if search_form.is_valid():
+            title = search_form.cleaned_data.get("title", "")
+            if title:
+                queryset = queryset.filter(
+                    title__icontains=title
+                )
+        if filter_form.is_valid():
+            selected_genres = filter_form.cleaned_data.get("genres", [])
+            if selected_genres:
+                queryset = queryset.filter(genre__in=selected_genres).distinct()
+
+        if order_form.is_valid():
+            order = order_form.cleaned_data.get("order", "title")
+            if order:
+                queryset = queryset.order_by(order)
+
+        return queryset
+
+
+class AnimeListView(generic.ListView, LoginRequiredMixin):
+    model = Anime
+    paginate_by = 50
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_form = MediaSearchForm(self.request.GET)
+        filter_form = MediaFilterForm(self.request.GET)
+        order_form = AnimeOrderForm(self.request.GET)
+        context["search_form"] = search_form
+        context["filter_form"] = filter_form
+        context["order_form"] = order_form
+        context["genres"] = Genre.objects.all()
+        context["selected_genres"] = self.request.GET.getlist("genres")
+        return context
+
+    def get_queryset(self):
+        queryset = Anime.objects.prefetch_related("genre")
+        search_form = MediaSearchForm(self.request.GET)
+        filter_form = MediaFilterForm(self.request.GET)
+        order_form = AnimeOrderForm(self.request.GET)
 
         if search_form.is_valid():
             title = search_form.cleaned_data.get("title", "")
@@ -120,6 +186,10 @@ class MovieDetailView(generic.DetailView, LoginRequiredMixin):
     model = Movie
 
 
+class AnimeDetailView(generic.DetailView, LoginRequiredMixin):
+    model = Anime
+
+
 class MovieUpdateView(generic.UpdateView, LoginRequiredMixin):
     model = Movie
     fields = ["year_released", "description", "genre"]
@@ -129,6 +199,15 @@ class MovieUpdateView(generic.UpdateView, LoginRequiredMixin):
         return reverse_lazy("media:movie-detail", kwargs={"pk": movie_id})
 
 
+class AnimeUpdateView(generic.UpdateView, LoginRequiredMixin):
+    model = Anime
+    fields = ["year_released", "description", "genre", "seasons", "episodes"]
+
+    def get_success_url(self):
+        anime_id = self.object.id
+        return reverse_lazy("media:anime-detail", kwargs={"pk": anime_id})
+
+
 class MovieCreateView(generic.CreateView, LoginRequiredMixin):
     model = Movie
     fields = ["title", "year_released", "description", "genre"]
@@ -136,6 +215,15 @@ class MovieCreateView(generic.CreateView, LoginRequiredMixin):
     def get_success_url(self):
         movie_id = self.object.id
         return reverse_lazy("media:movie-detail", kwargs={"pk": movie_id})
+
+
+class AnimeCreateView(generic.CreateView, LoginRequiredMixin):
+    model = Anime
+    fields = ["title", "year_released", "description", "genre", "seasons", "episodes"]
+
+    def get_success_url(self):
+        anime_id = self.object.id
+        return reverse_lazy("media:anime-detail", kwargs={"pk": anime_id})
 
 
 class MovieDeleteView(generic.DeleteView, LoginRequiredMixin):
@@ -161,6 +249,23 @@ def update_user_movie_data_view(request: HttpRequest, pk: int) -> HttpResponse:
 
 
 @login_required
+def update_user_anime_data_view(request: HttpRequest, pk: int) -> HttpResponse:
+    user = request.user
+    anime = get_object_or_404(Anime, id=pk)
+    user_anime_data = get_object_or_404(UserAnimeData, user=user, anime=anime)
+
+    if request.method == 'POST':
+        form = UserAnimeDataForm(request.POST, instance=user_anime_data)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse_lazy("media:user-anime-list"))
+    else:
+        form = UserAnimeDataForm(instance=user_anime_data)
+
+    return render(request, 'media/user_anime_data_form.html', {'form': form, 'anime': anime})
+
+
+@login_required
 def add_movie(request: HttpRequest, pk: int) -> HttpResponse:
     user = User.objects.get(id=request.user.id)
     if Movie.objects.get(id=pk) in user.movies.all():
@@ -168,3 +273,13 @@ def add_movie(request: HttpRequest, pk: int) -> HttpResponse:
     else:
         user.movies.add(pk)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse_lazy("media:movie-list")))
+
+
+@login_required
+def add_anime(request: HttpRequest, pk: int) -> HttpResponse:
+    user = User.objects.get(id=request.user.id)
+    if Anime.objects.get(id=pk) in user.anime.all():
+        user.anime.remove(pk)
+    else:
+        user.anime.add(pk)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse_lazy("media:anime-list")))

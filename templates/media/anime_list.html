@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load query_transform %}
+{% block content %}
+  <h1>Anime</h1>
+  <form method="get" action="">
+    {{ search_form.as_p }}
+    {{ order_form.as_p }}
+    <details>
+    <summary>Filter by Genre</summary>
+    <div style="column-count: 5">
+      {{ filter_form.as_p }}
+    </div>
+    </details>
+    <input type="submit" value="🔍" class="btn btn-secondary">
+  </form>
+  <table>
+  <tr>
+    <th>
+      Title
+    </th>
+    <th>
+      Genres
+    </th>
+    <th>
+      Year of release
+    </th>
+    <th>
+      Add/Delete
+    </th>
+  </tr>
+  {% if anime_list %}
+    {% for anime in anime_list %}
+      <tr>
+        <th>
+          <a href="{% url 'media:anime-detail' anime.id %}">{{ anime.title }}</a>
+        </th>
+        <th>
+          {% for genre in anime.genre.all  %}
+          {{ genre }}
+          {% empty %}
+          {% endfor %}
+        </th>
+        <th>
+          {{ anime.year_released }}
+        </th>
+        <th>
+          {% if anime in user.anime.all %}
+            <a href="{% url 'media:anime-add' anime.id %}">Remove from list</a>
+          {% else %}
+            <a href="{% url 'media:anime-add' anime.id %}">Add to list</a>
+          {% endif %}
+        </th>
+      </tr>
+    {% endfor %}
+  {% endif %}
+  </table>
+{% endblock %}
+{% block content-after %}
+  <h3><a href="{% url "media:anime-create" %}">Can't find anime? Click here to create new one</a></h3>
+{% endblock %}

@@ -1,0 +1,261 @@
+[
+    {
+        "title": "Naruto",
+        "year_released": 2002,
+        "seasons": 5,
+        "episodes": 220,
+        "description": "A young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the village's leader and strongest ninja."
+    },
+    {
+        "title": "Attack on Titan",
+        "year_released": 2013,
+        "seasons": 4,
+        "episodes": 75,
+        "description": "Humans are nearly exterminated by giant creatures called Titans. The survivors hide behind a giant wall to protect themselves."
+    },
+    {
+        "title": "Death Note",
+        "year_released": 2006,
+        "seasons": 1,
+        "episodes": 37,
+        "description": "A high school student discovers a supernatural notebook that allows him to kill anyone whose name he writes in it."
+    },
+    {
+        "title": "One Piece",
+        "year_released": 1999,
+        "seasons": 20,
+        "episodes": 1000,
+        "description": "Follows the adventures of Monkey D. Luffy and his pirate crew in order to find the greatest treasure ever left by the legendary Pirate, Gold Roger."
+    },
+    {
+        "title": "Fullmetal Alchemist: Brotherhood",
+        "year_released": 2009,
+        "seasons": 1,
+        "episodes": 64,
+        "description": "Two brothers use alchemy to resurrect their mother, but they unleash a dark force that cannot be controlled."
+    },
+    {
+        "title": "My Hero Academia",
+        "year_released": 2016,
+        "seasons": 5,
+        "episodes": 88,
+        "description": "In a world where nearly everyone has superpowers called Quirks, a young boy is determined to become a hero."
+    },
+    {
+        "title": "Sword Art Online",
+        "year_released": 2012,
+        "seasons": 4,
+        "episodes": 97,
+        "description": "Players of a virtual reality MMORPG must escape the game they're trapped in by clearing all its levels."
+    },
+    {
+        "title": "Tokyo Ghoul",
+        "year_released": 2014,
+        "seasons": 2,
+        "episodes": 24,
+        "description": "A college student is attacked by a ghoul, a superpowered human who feeds on human flesh, and becomes half-ghoul himself."
+    },
+    {
+        "title": "Steins;Gate",
+        "year_released": 2011,
+        "seasons": 1,
+        "episodes": 24,
+        "description": "A self-proclaimed mad scientist and his friends discover a way to send text messages into the past, which alters the present."
+    },
+    {
+        "title": "Demon Slayer: Kimetsu no Yaiba",
+        "year_released": 2019,
+        "seasons": 1,
+        "episodes": 26,
+        "description": "A young boy becomes a demon slayer to avenge his family and cure his sister from a demon curse."
+    },
+    {
+        "title": "Dragon Ball Z",
+        "year_released": 1989,
+        "seasons": 9,
+        "episodes": 291,
+        "description": "The adventures of Earth's martial arts defender Son Goku continue with a new family and the revelation of his alien origin."
+    },
+    {
+        "title": "Bleach",
+        "year_released": 2004,
+        "seasons": 16,
+        "episodes": 366,
+        "description": "High school student Ichigo Kurosaki, who has the ability to see ghosts, gains soul reaper powers and fights evil spirits."
+    },
+    {
+        "title": "Fairy Tail",
+        "year_released": 2009,
+        "seasons": 9,
+        "episodes": 328,
+        "description": "Lucy, an aspiring Celestial Wizard, becomes a friend and ally to powerful wizards Natsu, Gray, and Erza, who are part of the (in)famous wizard guild, Fairy Tail."
+    },
+    {
+        "title": "Hunter x Hunter",
+        "year_released": 2011,
+        "seasons": 3,
+        "episodes": 148,
+        "description": "Gon Freecss aspires to become a Hunter, an exceptional being capable of greatness. With his friends and his potential, he seeks for his father who left him when he was younger."
+    },
+    {
+        "title": "JoJo's Bizarre Adventure",
+        "year_released": 2012,
+        "seasons": 5,
+        "episodes": 152,
+        "description": "The story of the Joestar family, who are possessed with intense psychic strength, and the adventures each member encounters throughout their lives."
+    },
+    {
+        "title": "Code Geass: Lelouch of the Rebellion",
+        "year_released": 2006,
+        "seasons": 2,
+        "episodes": 50,
+        "description": "After being given a mysterious power of absolute obedience, an outcast prince becomes the masked leader of the rebellion against an all-powerful empire."
+    },
+    {
+        "title": "Gurren Lagann",
+        "year_released": 2007,
+        "seasons": 1,
+        "episodes": 27,
+        "description": "In a future where humans live underground, a young digger discovers a powerful mecha and fights to free humanity from oppression."
+    },
+    {
+        "title": "Neon Genesis Evangelion",
+        "year_released": 1995,
+        "seasons": 1,
+        "episodes": 26,
+        "description": "A teenage boy finds himself recruited as a member of an elite team of pilots by his father."
+    },
+    {
+        "title": "Cowboy Bebop",
+        "year_released": 1998,
+        "seasons": 1,
+        "episodes": 26,
+        "description": "The futuristic misadventures and tragedies of an easygoing bounty hunter and his partners."
+    },
+    {
+        "title": "Samurai Champloo",
+        "year_released": 2004,
+        "seasons": 1,
+        "episodes": 26,
+        "description": "Two samurai in feudal Japan, who were both saved from execution by a girl, accompany her on a quest to find a mysterious samurai who smells of sunflowers."
+    },
+    {
+        "title": "Berserk",
+        "year_released": 1997,
+        "seasons": 1,
+        "episodes": 25,
+        "description": "Guts, a man who calls himself The Black Swordsman, looks upon his days serving as a member of a group of mercenaries, the Band of the Hawk, led by his best friend, Griffith."
+    },
+    {
+        "title": "One Punch Man",
+        "year_released": 2015,
+        "seasons": 2,
+        "episodes": 24,
+        "description": "The story of Saitama, a hero who is a hero just for fun & can defeat his enemies with a single punch."
+    },
+    {
+        "title": "Mob Psycho 100",
+        "year_released": 2016,
+        "seasons": 2,
+        "episodes": 25,
+        "description": "A psychic middle school boy tries to live a normal life and keep his growing powers in check, while being mentored by a con artist."
+    },
+    {
+        "title": "The Seven Deadly Sins",
+        "year_released": 2014,
+        "seasons": 4,
+        "episodes": 76,
+        "description": "A group of knights called the Seven Deadly Sins must find a way to overthrow the tyrannical rulers of their kingdom."
+    },
+    {
+        "title": "Black Clover",
+        "year_released": 2017,
+        "seasons": 4,
+        "episodes": 170,
+        "description": "A young boy dreams of becoming the greatest mage in the world despite his inability to use magic."
+    },
+    {
+        "title": "Re:Zero - Starting Life in Another World",
+        "year_released": 2016,
+        "seasons": 2,
+        "episodes": 50,
+        "description": "A young man is transported to another world where he discovers that he has the power to reverse time by dying."
+    },
+    {
+        "title": "Your Lie in April",
+        "year_released": 2014,
+        "seasons": 1,
+        "episodes": 22,
+        "description": "A piano prodigy who has lost his ability to play after his mother's death meets a violinist who changes his life forever."
+    },
+    {
+        "title": "Clannad: After Story",
+        "year_released": 2008,
+        "seasons": 1,
+        "episodes": 25,
+        "description": "A sequel to the anime series Clannad, it follows the main protagonist Tomoya Okazaki and his relationship with Nagisa Furukawa, their challenges of growing up, and choices in life."
+    },
+    {
+        "title": "Toradora!",
+        "year_released": 2008,
+        "seasons": 1,
+        "episodes": 25,
+        "description": "A high school student with a misunderstood face and a small but fiery girl form an unlikely friendship and help each other with their romantic relationships."
+    },
+    {
+        "title": "K-On!",
+        "year_released": 2009,
+        "seasons": 2,
+        "episodes": 39,
+        "description": "The story of four high school girls who become friends through the Light Music Club and embark on their musical journey together."
+    },
+    {
+        "title": "Anohana: The Flower We Saw That Day",
+        "year_released": 2011,
+        "seasons": 1,
+        "episodes": 11,
+        "description": "Five childhood friends drift apart after the death of one of them, but are reunited when the ghost of their deceased friend appears to one of them and asks for help."
+    },
+    {
+        "title": "Angel Beats!",
+        "year_released": 2010,
+        "seasons": 1,
+        "episodes": 13,
+        "description": "In the afterlife, a group of deceased students fight against an unknown entity that forces them to live out their high school days in a purgatorial setting."
+    },
+    {
+        "title": "Fate/stay night: Unlimited Blade Works",
+        "year_released": 2014,
+        "seasons": 2,
+        "episodes": 26,
+        "description": "A teenager is thrust into a deadly tournament known as the Holy Grail War where seven mages summon powerful spirits to compete for a wish-granting artifact."
+    },
+    {
+        "title": "Fate/Zero",
+        "year_released": 2011,
+        "seasons": 2,
+        "episodes": 25,
+        "description": "A prequel to Fate/stay night, it follows the events of the Fourth Holy Grail War, a deadly competition where mages summon heroic spirits to fight for an omnipotent wish-granting artifact."
+    },
+    {
+        "title": "Kabaneri of the Iron Fortress",
+        "year_released": 2016,
+        "seasons": 1,
+        "episodes": 12,
+        "description": "During the industrial revolution, a mysterious virus transforms infected humans into monstrous Kabane, and survivors take refuge on a fortress-like train."
+    },
+    {
+        "title": "Violet Evergarden",
+        "year_released": 2018,
+        "seasons": 1,
+        "episodes": 13,
+        "description": "A former soldier named Violet Evergarden, who is now a ghostwriter, learns to understand emotions and human connections through her work."
+    },
+    {
+        "title": "The Rising of the Shield Hero",
+        "year_released": 2019,
+        "seasons": 2,
+        "episodes": 38,
+        "description": "A man is summoned to another world to become one of four legendary heroes tasked with saving the world, but is betrayed and framed before he can begin his quest."
+    }
+]
