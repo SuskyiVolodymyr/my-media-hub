@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
@@ -25,7 +25,6 @@ from media.models import (
     Anime,
     Series,
     Cartoon,
-    User,
     UserMovieData,
     Genre,
     UserAnimeData,
@@ -35,7 +34,7 @@ from media.models import (
 
 @login_required
 def index(request: HttpRequest) -> HttpResponse:
-    user = User.objects.get(id=request.user.id)
+    user = get_user_model().objects.get(id=request.user.id)
     movies = user.movies.count()
     anime = user.anime.count()
     series = user.series.count()
@@ -95,7 +94,7 @@ class UserMediaListView(generic.ListView, LoginRequiredMixin, ABC):
         pass
 
     def get_queryset(self):
-        user = User.objects.get(id=self.request.user.id)
+        user = get_user_model().objects.get(id=self.request.user.id)
         queryset = self.model.objects.filter(user_id=user.id)
         search_form = MediaSearchForm(self.request.GET)
         status_filter_form = StatusFilterForm(self.request.GET)
@@ -288,7 +287,7 @@ def update_user_anime_data_view(request: HttpRequest, pk: int) -> HttpResponse:
 
 @login_required
 def add_movie(request: HttpRequest, pk: int) -> HttpResponse:
-    user = User.objects.get(id=request.user.id)
+    user = get_user_model().objects.get(id=request.user.id)
     if Movie.objects.get(id=pk) in user.movies.all():
         user.movies.remove(pk)
     else:
@@ -298,7 +297,7 @@ def add_movie(request: HttpRequest, pk: int) -> HttpResponse:
 
 @login_required
 def add_anime(request: HttpRequest, pk: int) -> HttpResponse:
-    user = User.objects.get(id=request.user.id)
+    user = get_user_model().objects.get(id=request.user.id)
     if Anime.objects.get(id=pk) in user.anime.all():
         user.anime.remove(pk)
     else:

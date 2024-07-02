@@ -1,9 +1,10 @@
 from abc import ABC
 
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
-from media.models import UserMovieData, User, Genre, UserAnimeData
+from media.models import UserMovieData, Genre, UserAnimeData
 
 
 class UserMediaDataForm(forms.ModelForm):
@@ -35,7 +36,7 @@ class UserAnimeDataForm(UserMediaDataForm):
 
 class NewUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        model = User
+        model = get_user_model()
         fields = ["username", "email", "password1", "password2"]
 
 
