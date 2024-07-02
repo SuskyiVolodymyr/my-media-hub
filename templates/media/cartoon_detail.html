@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{ cartoon.title }}
+  <a href="{% url 'media:cartoon-update' cartoon.id %}">Update</a>
+  <a href="{% url 'media:cartoon-delete' cartoon.id %}">Delete</a>
+  </h1>
+  <p>Year of release: {{ cartoon.year_released }}</p>
+  <p>Genres: 
+    {% for genre in cartoon.genre.all %}
+      {{ genre }}
+    {% endfor %}
+  </p>
+  <p>Description: 
+    {% if cartoon.description %}
+      {{ cartoon.description }}</p>
+    {% else %}
+      No description
+    {% endif %}
+  
+{% endblock %}

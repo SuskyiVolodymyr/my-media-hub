@@ -6,6 +6,7 @@ from media.views import (
     UserMovieListView,
     UserAnimeListView,
     UserSeriesListView,
+    UserCartoonListView,
     MovieListView,
     MovieCreateView,
     MovieDetailView,
@@ -27,6 +28,13 @@ from media.views import (
     update_user_movie_data_view,
     update_user_anime_data_view,
     update_user_series_data_view,
+    update_user_cartoon_data_view,
+    CartoonListView,
+    CartoonCreateView,
+    CartoonDetailView,
+    CartoonUpdateView,
+    CartoonDeleteView,
+    add_cartoon,
 )
 
 urlpatterns = [
@@ -56,6 +64,14 @@ urlpatterns = [
     path("series/<int:pk>/detail", SeriesDetailView.as_view(), name="series-detail"),
     path("series/<int:pk>/update/", SeriesUpdateView.as_view(), name="series-update"),
     path("series/<int:pk>/delete", SeriesDeleteView.as_view(), name="series-delete"),
+    path("user_cartoons/", UserCartoonListView.as_view(), name="user-cartoon-list"),
+    path("user_cartoon_data/<int:pk>/update/", update_user_cartoon_data_view, name="user-cartoon-data-update"),
+    path("cartoons/", CartoonListView.as_view(), name="cartoon-list"),
+    path("cartoons/<int:pk>/add_cartoon", add_cartoon, name="cartoon-add"),
+    path("cartoon/create", CartoonCreateView.as_view(), name="cartoon-create"),
+    path("cartoon/<int:pk>/detail", CartoonDetailView.as_view(), name="cartoon-detail"),
+    path("cartoon/<int:pk>/update/", CartoonUpdateView.as_view(), name="cartoon-update"),
+    path("cartoon/<int:pk>/delete", CartoonDeleteView.as_view(), name="cartoon-delete"),
 
 ]
 

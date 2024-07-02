@@ -17,7 +17,7 @@ from media.forms import (
     MediaFilterForm,
     MovieOrderForm,
     UserAnimeDataForm,
-    StatusFilterForm, MediaOrderForm, UserSeriesDataForm
+    StatusFilterForm, MediaOrderForm, UserSeriesDataForm, UserCartoonDataForm
 )
 from media.models import (
     Movie,
@@ -26,7 +26,7 @@ from media.models import (
     Cartoon,
     UserMovieData,
     Genre,
-    UserAnimeData, UserSeriesData,
+    UserAnimeData, UserSeriesData, UserCartoonData,
 )
 
 
@@ -133,6 +133,15 @@ class UserSeriesListView(UserMediaListView):
         return queryset.filter(series__title__icontains=filter_by)
 
 
+class UserCartoonListView(UserMediaListView):
+    model = UserCartoonData
+    template_name = "media/user_cartoon_list.html"
+
+    @staticmethod
+    def media_title_filter(queryset: QuerySet, filter_by: str) -> QuerySet:
+        return queryset.filter(cartoon__title__icontains=filter_by)
+
+
 class MediaListView(generic.ListView, LoginRequiredMixin, ABC):
     model = None
     paginate_by = 50
@@ -189,6 +198,11 @@ class SeriesListView(MediaListView):
     order_form = MediaOrderForm
 
 
+class CartoonListView(MediaListView):
+    model = Cartoon
+    order_form = MediaOrderForm
+
+
 class MovieDetailView(generic.DetailView, LoginRequiredMixin):
     model = Movie
 
@@ -199,6 +213,10 @@ class AnimeDetailView(generic.DetailView, LoginRequiredMixin):
 
 class SeriesDetailView(generic.DetailView, LoginRequiredMixin):
     model = Series
+
+
+class CartoonDetailView(generic.DetailView, LoginRequiredMixin):
+    model = Cartoon
 
 
 class MovieUpdateView(generic.UpdateView, LoginRequiredMixin):
@@ -228,6 +246,15 @@ class SeriesUpdateView(generic.UpdateView, LoginRequiredMixin):
         return reverse_lazy("media:series-detail", kwargs={"pk": series_id})
 
 
+class CartoonUpdateView(generic.UpdateView, LoginRequiredMixin):
+    model = Cartoon
+    fields = ["year_released", "description", "genre", "seasons", "episodes"]
+
+    def get_success_url(self):
+        cartoon_id = self.object.id
+        return reverse_lazy("media:cartoon-detail", kwargs={"pk": cartoon_id})
+
+
 class MovieCreateView(generic.CreateView, LoginRequiredMixin):
     model = Movie
     fields = ["title", "year_released", "description", "genre"]
@@ -255,6 +282,15 @@ class SeriesCreateView(generic.CreateView, LoginRequiredMixin):
         return reverse_lazy("media:series-detail", kwargs={"pk": series_id})
 
 
+class CartoonCreateView(generic.CreateView, LoginRequiredMixin):
+    model = Cartoon
+    fields = ["title", "year_released", "description", "genre", "seasons", "episodes"]
+
+    def get_success_url(self):
+        cartoon_id = self.object.id
+        return reverse_lazy("media:cartoon-detail", kwargs={"pk": cartoon_id})
+
+
 class MovieDeleteView(generic.DeleteView, LoginRequiredMixin):
     model = Movie
     success_url = reverse_lazy("media:movie-list")
@@ -268,6 +304,11 @@ class AnimeDeleteView(generic.DeleteView, LoginRequiredMixin):
 class SeriesDeleteView(generic.DeleteView, LoginRequiredMixin):
     model = Series
     success_url = reverse_lazy("media:series-list")
+
+
+class CartoonDeleteView(generic.DeleteView, LoginRequiredMixin):
+    model = Cartoon
+    success_url = reverse_lazy("media:cartoon-list")
 
 
 @login_required
@@ -341,6 +382,22 @@ def update_user_series_data_view(request: HttpRequest, pk: int) -> HttpResponse:
     )
 
 
+def update_user_cartoon_data_view(request: HttpRequest, pk: int) -> HttpResponse:
+    user = request.user
+    cartoon = get_object_or_404(Cartoon, id=pk)
+    user_cartoon_data = get_object_or_404(UserCartoonData, user=user, cartoon=cartoon)
+    response = reverse_lazy("media:user-cartoon-list")
+    template = "media/user_cartoon_data_form.html"
+    return update_user_media_data(
+        request=request,
+        user_media_data=user_cartoon_data,
+        user_media_data_form=UserCartoonDataForm,
+        response=response,
+        template=template,
+        context={"cartoon": cartoon}
+    )
+
+
 @login_required
 def add_movie(request: HttpRequest, pk: int) -> HttpResponse:
     user = get_user_model().objects.get(id=request.user.id)
@@ -369,3 +426,13 @@ def add_series(request: HttpRequest, pk: int) -> HttpResponse:
     else:
         user.series.add(pk)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse_lazy("media:series-list")))
+
+
+@login_required
+def add_cartoon(request: HttpRequest, pk: int) -> HttpResponse:
+    user = get_user_model().objects.get(id=request.user.id)
+    if Cartoon.objects.get(id=pk) in user.cartoons.all():
+        user.cartoons.remove(pk)
+    else:
+        user.cartoons.add(pk)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse_lazy("media:cartoon-list")))
