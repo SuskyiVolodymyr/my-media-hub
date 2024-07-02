@@ -22,6 +22,7 @@ class UserMediaDataMixin(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ["-rate"]
 
 
 class UserMovieData(UserMediaDataMixin):

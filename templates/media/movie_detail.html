@@ -2,6 +2,7 @@
 {% block content %}
   <h1>{{ movie.title }}
   <a href="{% url 'media:movie-update' movie.id %}">Update</a>
+  <a href="{% url 'media:movie-delete' movie.id %}">Delete</a>
   </h1>
   <p>Year of release: {{ movie.year_released }}</p>
   <p>Genres: 

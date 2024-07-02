@@ -119,6 +119,20 @@ class MovieUpdateView(generic.UpdateView, LoginRequiredMixin):
         return reverse_lazy("media:movie-detail", kwargs={"pk": movie_id})
 
 
+class MovieCreateView(generic.CreateView, LoginRequiredMixin):
+    model = Movie
+    fields = ["title", "year_released", "description", "genre"]
+
+    def get_success_url(self):
+        movie_id = self.object.id
+        return reverse_lazy("media:movie-detail", kwargs={"pk": movie_id})
+
+
+class MovieDeleteView(generic.DeleteView, LoginRequiredMixin):
+    model = Movie
+    success_url = reverse_lazy("media:movie-list")
+
+
 @login_required
 def update_user_movie_data_view(request: HttpRequest, pk: int) -> HttpResponse:
     user = request.user

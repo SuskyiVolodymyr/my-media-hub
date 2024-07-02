@@ -54,4 +54,6 @@
   {% endif %}
   </table>
 {% endblock %}
-
+{% block content-after %}
+  <h3><a href="{% url "media:movie-create" %}">Can't find movie? Click here to create new one</a></h3>
+{% endblock %}
