@@ -16,9 +16,8 @@ from media.forms import (
     MediaSearchForm,
     MediaFilterForm,
     MovieOrderForm,
-    AnimeOrderForm,
     UserAnimeDataForm,
-    StatusFilterForm
+    StatusFilterForm, MediaOrderForm, UserSeriesDataForm
 )
 from media.models import (
     Movie,
@@ -27,8 +26,7 @@ from media.models import (
     Cartoon,
     UserMovieData,
     Genre,
-    UserAnimeData,
-    MediaDescription
+    UserAnimeData, UserSeriesData,
 )
 
 
@@ -126,6 +124,15 @@ class UserAnimeListView(UserMediaListView):
         return queryset.filter(anime__title__icontains=filter_by)
 
 
+class UserSeriesListView(UserMediaListView):
+    model = UserSeriesData
+    template_name = "media/user_series_list.html"
+
+    @staticmethod
+    def media_title_filter(queryset: QuerySet, filter_by: str) -> QuerySet:
+        return queryset.filter(series__title__icontains=filter_by)
+
+
 class MediaListView(generic.ListView, LoginRequiredMixin, ABC):
     model = None
     paginate_by = 50
@@ -174,7 +181,12 @@ class MovieListView(MediaListView):
 
 class AnimeListView(MediaListView):
     model = Anime
-    order_form = AnimeOrderForm
+    order_form = MediaOrderForm
+
+
+class SeriesListView(MediaListView):
+    model = Series
+    order_form = MediaOrderForm
 
 
 class MovieDetailView(generic.DetailView, LoginRequiredMixin):
@@ -183,6 +195,10 @@ class MovieDetailView(generic.DetailView, LoginRequiredMixin):
 
 class AnimeDetailView(generic.DetailView, LoginRequiredMixin):
     model = Anime
+
+
+class SeriesDetailView(generic.DetailView, LoginRequiredMixin):
+    model = Series
 
 
 class MovieUpdateView(generic.UpdateView, LoginRequiredMixin):
@@ -203,6 +219,15 @@ class AnimeUpdateView(generic.UpdateView, LoginRequiredMixin):
         return reverse_lazy("media:anime-detail", kwargs={"pk": anime_id})
 
 
+class SeriesUpdateView(generic.UpdateView, LoginRequiredMixin):
+    model = Series
+    fields = ["year_released", "description", "genre", "seasons", "episodes"]
+
+    def get_success_url(self):
+        series_id = self.object.id
+        return reverse_lazy("media:series-detail", kwargs={"pk": series_id})
+
+
 class MovieCreateView(generic.CreateView, LoginRequiredMixin):
     model = Movie
     fields = ["title", "year_released", "description", "genre"]
@@ -221,6 +246,15 @@ class AnimeCreateView(generic.CreateView, LoginRequiredMixin):
         return reverse_lazy("media:anime-detail", kwargs={"pk": anime_id})
 
 
+class SeriesCreateView(generic.CreateView, LoginRequiredMixin):
+    model = Series
+    fields = ["title", "year_released", "description", "genre", "seasons", "episodes"]
+
+    def get_success_url(self):
+        series_id = self.object.id
+        return reverse_lazy("media:series-detail", kwargs={"pk": series_id})
+
+
 class MovieDeleteView(generic.DeleteView, LoginRequiredMixin):
     model = Movie
     success_url = reverse_lazy("media:movie-list")
@@ -229,6 +263,11 @@ class MovieDeleteView(generic.DeleteView, LoginRequiredMixin):
 class AnimeDeleteView(generic.DeleteView, LoginRequiredMixin):
     model = Anime
     success_url = reverse_lazy("media:anime-list")
+
+
+class SeriesDeleteView(generic.DeleteView, LoginRequiredMixin):
+    model = Series
+    success_url = reverse_lazy("media:series-list")
 
 
 @login_required
@@ -286,6 +325,23 @@ def update_user_anime_data_view(request: HttpRequest, pk: int) -> HttpResponse:
 
 
 @login_required
+def update_user_series_data_view(request: HttpRequest, pk: int) -> HttpResponse:
+    user = request.user
+    series = get_object_or_404(Series, id=pk)
+    user_series_data = get_object_or_404(UserSeriesData, user=user, series=series)
+    response = reverse_lazy("media:user-series-list")
+    template = "media/user_series_data_form.html"
+    return update_user_media_data(
+        request=request,
+        user_media_data=user_series_data,
+        user_media_data_form=UserSeriesDataForm,
+        response=response,
+        template=template,
+        context={"series": series}
+    )
+
+
+@login_required
 def add_movie(request: HttpRequest, pk: int) -> HttpResponse:
     user = get_user_model().objects.get(id=request.user.id)
     if Movie.objects.get(id=pk) in user.movies.all():
@@ -303,3 +359,13 @@ def add_anime(request: HttpRequest, pk: int) -> HttpResponse:
     else:
         user.anime.add(pk)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse_lazy("media:anime-list")))
+
+
+@login_required
+def add_series(request: HttpRequest, pk: int) -> HttpResponse:
+    user = get_user_model().objects.get(id=request.user.id)
+    if Series.objects.get(id=pk) in user.series.all():
+        user.series.remove(pk)
+    else:
+        user.series.add(pk)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse_lazy("media:series-list")))

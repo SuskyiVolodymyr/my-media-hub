@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
-from media.models import UserMovieData, Genre, UserAnimeData
+from media.models import UserMovieData, Genre, UserAnimeData, UserSeriesData
 
 
 class UserMediaDataForm(forms.ModelForm):
@@ -31,6 +31,12 @@ class UserMovieDataForm(UserMediaDataForm):
 class UserAnimeDataForm(UserMediaDataForm):
     class Meta:
         model = UserAnimeData
+        fields = ["rate", "status", "comment"]
+
+
+class UserSeriesDataForm(UserMediaDataForm):
+    class Meta:
+        model = UserSeriesData
         fields = ["rate", "status", "comment"]
 
 
@@ -85,8 +91,7 @@ class MovieOrderForm(forms.Form):
     )
 
 
-class AnimeOrderForm(forms.Form):
-
+class MediaOrderForm(forms.Form):
     order = forms.ChoiceField(
         choices=(
             ("title", "Title"),
