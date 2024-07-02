@@ -9,11 +9,37 @@ class UserMovieDataForm(forms.ModelForm):
         model = UserMovieData
         fields = ["rate", "status", "comment"]
 
+    rate = forms.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        required=False
+    )
+
+    def clean_rate(self):
+        rate = self.cleaned_data["rate"]
+        if rate is not None and 0 <= rate <= 5:
+            raise forms.ValidationError("Rate must be between 0 and 5")
+
+        return rate
+
 
 class UserAnimeDataForm(forms.ModelForm):
     class Meta:
         model = UserAnimeData
         fields = ["rate", "status", "comment"]
+
+    rate = forms.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        required=False
+    )
+
+    def clean_rate(self):
+        rate = self.cleaned_data["rate"]
+        if rate is not None and 0 <= rate <= 5:
+            raise forms.ValidationError("Rate must be between 0 and 5")
+
+        return rate
 
 
 class NewUserCreationForm(UserCreationForm):
