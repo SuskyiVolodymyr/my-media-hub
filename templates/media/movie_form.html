@@ -1,10 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>{{ object|yesno:"Update,Create" }} Movie</h1>
+  <h1>
+    {{ object|yesno:"Update,Create" }} movie
+    {% if object %}
+    <br>"{{ movie.title }}"
+    {% endif %}
+  </h1>
   <form action="" method="post" novalidate>
     {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit">
+    <label for="{{ form.title.id_for_label }}">Title</label>
+    {{ form.title }}
+    <br>
+    <label for="{{ form.year_released.id_for_label }}">Year released</label>
+    {{ form.year_released }}
+    <br>
+    <label for="{{ form.description.id_for_label }}">Description</label>
+    {{ form.description }}
+    <br>
+    <details>
+    <summary class="order-summary">Genres</summary>
+    <div class="genres-columns">
+      {{ form.genre }}
+    </div>
+    </details>
+    <input type="submit" value="Submit" class="btn btn-primary">
   </form>
 {% endblock %}

@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>{{ series.title }}
-  <a href="{% url 'media:series-update' series.id %}">Update</a>
-  <a href="{% url 'media:series-delete' series.id %}">Delete</a>
+  <br>
+  <a href="{% url 'media:series-update' series.id %}" class="btn btn-info">Update</a>
+  <a href="{% url 'media:series-delete' series.id %}" class="btn btn-danger">Delete</a>
   </h1>
   <p>Year of release: {{ series.year_released }}</p>
   <p>Genres: 

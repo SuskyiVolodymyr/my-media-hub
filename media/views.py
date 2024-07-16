@@ -17,7 +17,11 @@ from media.forms import (
     MediaFilterForm,
     MovieOrderForm,
     UserAnimeDataForm,
-    StatusFilterForm, MediaOrderForm, UserSeriesDataForm, UserCartoonDataForm
+    StatusFilterForm,
+    MediaOrderForm,
+    UserSeriesDataForm,
+    UserCartoonDataForm,
+    MovieForm, AnimeForm, SeriesForm, CartoonForm,
 )
 from media.models import (
     Movie,
@@ -26,7 +30,9 @@ from media.models import (
     Cartoon,
     UserMovieData,
     Genre,
-    UserAnimeData, UserSeriesData, UserCartoonData,
+    UserAnimeData,
+    UserSeriesData,
+    UserCartoonData,
 )
 
 
@@ -106,7 +112,7 @@ class UserMediaListView(generic.ListView, LoginRequiredMixin, ABC):
         return queryset
 
 
-class UserMovieListView(UserMediaListView):
+class UserMovieListView(UserMediaListView, LoginRequiredMixin):
     model = UserMovieData
     template_name = "media/user_movie_list.html"
 
@@ -221,7 +227,7 @@ class CartoonDetailView(generic.DetailView, LoginRequiredMixin):
 
 class MovieUpdateView(generic.UpdateView, LoginRequiredMixin):
     model = Movie
-    fields = ["year_released", "description", "genre"]
+    form_class = MovieForm
 
     def get_success_url(self):
         movie_id = self.object.id
@@ -230,7 +236,7 @@ class MovieUpdateView(generic.UpdateView, LoginRequiredMixin):
 
 class AnimeUpdateView(generic.UpdateView, LoginRequiredMixin):
     model = Anime
-    fields = ["year_released", "description", "genre", "seasons", "episodes"]
+    form_class = AnimeForm
 
     def get_success_url(self):
         anime_id = self.object.id
@@ -239,7 +245,7 @@ class AnimeUpdateView(generic.UpdateView, LoginRequiredMixin):
 
 class SeriesUpdateView(generic.UpdateView, LoginRequiredMixin):
     model = Series
-    fields = ["year_released", "description", "genre", "seasons", "episodes"]
+    form_class = SeriesForm
 
     def get_success_url(self):
         series_id = self.object.id
@@ -248,7 +254,7 @@ class SeriesUpdateView(generic.UpdateView, LoginRequiredMixin):
 
 class CartoonUpdateView(generic.UpdateView, LoginRequiredMixin):
     model = Cartoon
-    fields = ["year_released", "description", "genre", "seasons", "episodes"]
+    form_class = CartoonForm
 
     def get_success_url(self):
         cartoon_id = self.object.id
@@ -257,7 +263,7 @@ class CartoonUpdateView(generic.UpdateView, LoginRequiredMixin):
 
 class MovieCreateView(generic.CreateView, LoginRequiredMixin):
     model = Movie
-    fields = ["title", "year_released", "description", "genre"]
+    form_class = MovieForm
 
     def get_success_url(self):
         movie_id = self.object.id
@@ -266,7 +272,7 @@ class MovieCreateView(generic.CreateView, LoginRequiredMixin):
 
 class AnimeCreateView(generic.CreateView, LoginRequiredMixin):
     model = Anime
-    fields = ["title", "year_released", "description", "genre", "seasons", "episodes"]
+    form_class = AnimeForm
 
     def get_success_url(self):
         anime_id = self.object.id
@@ -275,7 +281,7 @@ class AnimeCreateView(generic.CreateView, LoginRequiredMixin):
 
 class SeriesCreateView(generic.CreateView, LoginRequiredMixin):
     model = Series
-    fields = ["title", "year_released", "description", "genre", "seasons", "episodes"]
+    form_class = SeriesForm
 
     def get_success_url(self):
         series_id = self.object.id
@@ -284,7 +290,7 @@ class SeriesCreateView(generic.CreateView, LoginRequiredMixin):
 
 class CartoonCreateView(generic.CreateView, LoginRequiredMixin):
     model = Cartoon
-    fields = ["title", "year_released", "description", "genre", "seasons", "episodes"]
+    form_class = CartoonForm
 
     def get_success_url(self):
         cartoon_id = self.object.id

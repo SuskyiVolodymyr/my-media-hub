@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>{{ movie.title }}
-  <a href="{% url 'media:movie-update' movie.id %}">Update</a>
-  <a href="{% url 'media:movie-delete' movie.id %}">Delete</a>
+  <br>
+  <a href="{% url 'media:movie-update' movie.id %}" class="btn btn-info">Update</a>
+  <a href="{% url 'media:movie-delete' movie.id %}" class="btn btn-danger">Delete</a>
   </h1>
   <p>Year of release: {{ movie.year_released }}</p>
-  <p>Genres: 
+  <p>Genres:
     {% for genre in movie.genre.all %}
       {{ genre }}
     {% endfor %}
   </p>
-  <p>Description: 
+  <p>Description:
     {% if movie.description %}
       {{ movie.description }}</p>
     {% else %}

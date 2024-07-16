@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "media",
     "django_extensions",
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -119,6 +120,10 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+STATICFILES_DIRS = (BASE_DIR / "static",)
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -127,3 +132,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "media.User"
 
 LOGIN_REDIRECT_URL = "/"
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"

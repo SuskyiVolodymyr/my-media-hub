@@ -4,69 +4,71 @@
   <h1>Anime</h1>
   <form method="get" action="">
     {{ search_form.as_p }}
-    {{ order_form.as_p }}
+    <label for="{{ order_form.order.id_for_label }}">Sort by</label>
+    {{ order_form.order }}
+    <br>
     <details>
-    <summary>Filter by Genre</summary>
-    <div style="column-count: 5">
+    <summary class="order-summary">Filter by Genre</summary>
+    <div class="genres-columns">
       {{ filter_form.as_p }}
     </div>
     </details>
     <input type="submit" value="🔍" class="btn btn-secondary">
   </form>
-  <table>
-  <tr>
-    <th>
-      Title
-    </th>
-    <th>
-      Genres
-    </th>
-    <th>
-      Seasons
-    </th>
-    <th>
-      Episodes
-    </th>
-    <th>
-      Year of release
-    </th>
-    <th>
+  <table class="media-table">
+    <tr class="media-table-header">
+      <th>
+        Title
+      </th>
+      <th>
+        Genres
+      </th>
+      <th>
+        Seasons
+      </th>
+      <th>
+        Episodes
+      </th>
+      <th>
+        Year of release
+      </th>
+      <th>
       Add/Delete
-    </th>
-  </tr>
-  {% if anime_list %}
-    {% for anime in anime_list %}
-      <tr>
-        <th>
-          <a href="{% url 'media:anime-detail' anime.id %}">{{ anime.title }}</a>
-        </th>
-        <th>
-          {% for genre in anime.genre.all  %}
-          {{ genre }}
-          {% empty %}
-          {% endfor %}
-        </th>
-        <th>
-          {{ anime.seasons }}
-        </th>
+      </th>
+    </tr>
+    {% if anime_list %}
+      {% for anime in anime_list %}
+        <tr>
           <th>
-          {{ anime.episodes }}
-        </th>
-        <th>
-          {{ anime.year_released }}
-        </th>
-        <th>
-          {% if anime in user.anime.all %}
-            <a href="{% url 'media:anime-add' anime.id %}">Remove from list</a>
-          {% else %}
-            <a href="{% url 'media:anime-add' anime.id %}">Add to list</a>
-          {% endif %}
-        </th>
-      </tr>
-    {% endfor %}
-  {% endif %}
+            <a href="{% url 'media:anime-detail' anime.id %}">{{ anime.title }}</a>
+          </th>
+          <th>
+            {% for genre in anime.genre.all  %}
+            {{ genre }}
+            {% empty %}
+            {% endfor %}
+          </th>
+          <th>
+            {{ anime.seasons }}
+          </th>
+            <th>
+            {{ anime.episodes }}
+          </th>
+          <th>
+            {{ anime.year_released }}
+          </th>
+          <th>
+            {% if anime in user.anime.all %}
+              <a href="{% url 'media:anime-add' anime.id %}">Remove from list</a>
+            {% else %}
+              <a href="{% url 'media:anime-add' anime.id %}">Add to list</a>
+            {% endif %}
+          </th>
+        </tr>
+      {% endfor %}
+    {% endif %}
   </table>
 {% endblock %}
 {% block content-after %}
-  <h3><a href="{% url "media:anime-create" %}">Can't find anime? Click here to create new one</a></h3>
+  <h3><a href="{% url "media:anime-create" %}" class="create-media">Can't find anime? Click here to create new one</a></h3>
 {% endblock %}

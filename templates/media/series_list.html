@@ -4,69 +4,71 @@
   <h1>Series</h1>
   <form method="get" action="">
     {{ search_form.as_p }}
-    {{ order_form.as_p }}
+    <label for="{{ order_form.order.id_for_label }}">Sort by</label>
+    {{ order_form.order }}
+    <br>
     <details>
-    <summary>Filter by Genre</summary>
-    <div style="column-count: 5">
-      {{ filter_form.as_p }}
-    </div>
+      <summary class="order-summary">Filter by Genre</summary>
+      <div class="genres-columns">
+        {{ filter_form.as_p }}
+      </div>
     </details>
     <input type="submit" value="🔍" class="btn btn-secondary">
   </form>
-  <table>
-  <tr>
-    <th>
-      Title
-    </th>
-    <th>
-      Genres
-    </th>
-    <th>
-      Seasons
-    </th>
-    <th>
-      Episodes
-    </th>
-    <th>
-      Year of release
-    </th>
-    <th>
-      Add/Delete
-    </th>
-  </tr>
-  {% if series_list %}
-    {% for series in series_list %}
-      <tr>
-        <th>
-          <a href="{% url 'media:series-detail' series.id %}">{{ series.title }}</a>
-        </th>
-        <th>
-          {% for genre in series.genre.all  %}
-          {{ genre }}
-          {% empty %}
-          {% endfor %}
-        </th>
-        <th>
-          {{ series.seasons }}
-        </th>
+  <table class="media-table">
+    <tr class="media-table-header">
+      <th>
+        Title
+      </th>
+      <th>
+        Genres
+      </th>
+      <th>
+        Seasons
+      </th>
+      <th>
+        Episodes
+      </th>
+      <th>
+        Year of release
+      </th>
+      <th>
+        Add/Delete
+      </th>
+    </tr>
+    {% if series_list %}
+      {% for series in series_list %}
+        <tr>
           <th>
-          {{ series.episodes }}
-        </th>
-        <th>
-          {{ series.year_released }}
-        </th>
-        <th>
-          {% if series in user.series.all %}
-            <a href="{% url 'media:series-add' series.id %}">Remove from list</a>
-          {% else %}
-            <a href="{% url 'media:series-add' series.id %}">Add to list</a>
-          {% endif %}
-        </th>
-      </tr>
-    {% endfor %}
-  {% endif %}
+            <a href="{% url 'media:series-detail' series.id %}">{{ series.title }}</a>
+          </th>
+          <th>
+            {% for genre in series.genre.all %}
+              {{ genre }}
+            {% empty %}
+            {% endfor %}
+          </th>
+          <th>
+            {{ series.seasons }}
+          </th>
+          <th>
+            {{ series.episodes }}
+          </th>
+          <th>
+            {{ series.year_released }}
+          </th>
+          <th>
+            {% if series in user.series.all %}
+              <a href="{% url 'media:series-add' series.id %}">Remove from list</a>
+            {% else %}
+              <a href="{% url 'media:series-add' series.id %}">Add to list</a>
+            {% endif %}
+          </th>
+        </tr>
+      {% endfor %}
+    {% endif %}
   </table>
 {% endblock %}
 {% block content-after %}
-  <h3><a href="{% url "media:series-create" %}">Can't find series? Click here to create new one</a></h3>
+  <h3><a href="{% url "media:series-create" %}" class="create-media">Can't find series? Click here to create new one</a></h3>
 {% endblock %}

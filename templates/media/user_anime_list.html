@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
   <h1>Anime
-    <a href="{% url 'media:anime-list' %}">Add new anime</a>
+    <a href="{% url 'media:anime-list' %}" class="btn btn-secondary">Add new anime</a>
   </h1>
   <form method="get" action="">
     {{ search_form.as_p }}
-    {{ show_only_form.as_p }}
+    <label for="{{ show_only_form.show_only.id_for_label }}">Show only</label>
+    {{ show_only_form.show_only }}
     <input type="submit" value="🔍" class="btn btn-secondary">
   </form>
-  <table>
-    <tr>
+  <table class="media-table">
+    <tr class="media-table-header">
       <th>
         Title
       </th>

@@ -1,31 +1,33 @@
-<ul>
+<ul class="sidebar-nav list-group sidebar">
   {% if user.is_authenticated %}
-    <li>User:{{ user.get_username }}</li>
-    <li>
+    <li class="list-group-item sidebar-item">
       <form method="post" action="{% url 'logout'%}">
         {% csrf_token %}
-        <input type="submit" value="Logout">
+        <p class="sidebar-link">User: {{ user.get_username }}
+        <input type="submit" value="Logout" class="btn btn-secondary">
+        </p>
       </form>
     </li>
   {% else %}
-    <li><a href="{% url 'login'%}">Login</a></li>
-    <li><a href="{% url "media:user-create" %}">Sign in</a></li>
+    <li class="list-group-item sidebar-item">
+      <a class="sidebar-link" href="{% url 'login'%}">Login</a>
+      <a class="sidebar-link" href="{% url "media:user-create" %}">Sign in</a>
+    </li>
   {% endif %}
 
-  <br>
-  <li>
-    <a href="{% url 'media:index' %}">Home</a>
+  <li class="list-group-item sidebar-item">
+    <a class="sidebar-link" href="{% url 'media:index' %}">Home</a>
   </li>
-  <li>
-    <a href="{% url 'media:user-movie-list' %}">Movies</a>
+  <li class="list-group-item sidebar-item">
+    <a class="sidebar-link" href="{% url 'media:user-movie-list' %}">Movies</a>
   </li>
-  <li>
-    <a href="{% url "media:user-anime-list" %}">Anime</a>
+  <li class="list-group-item sidebar-item">
+    <a class="sidebar-link" href="{% url "media:user-anime-list" %}">Anime</a>
   </li>
-  <li>
-    <a href="{% url "media:user-series-list" %}">Series</a>
+  <li class="list-group-item sidebar-item">
+    <a class="sidebar-link" href="{% url "media:user-series-list" %}">Series</a>
   </li>
-  <li>
-    <a href="{% url "media:user-cartoon-list" %}">Cartoons</a>
+  <li class="list-group-item sidebar-item">
+    <a class="sidebar-link" href="{% url "media:user-cartoon-list" %}">Cartoons</a>
   </li>
 </ul>

@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Register</h1>
+  <h1 class="page-title">Register</h1>
   <form action="" method="post" novalidate>
     {% csrf_token %}
-    {{ form.as_p }}
-
+    <div class="credentials">
+      {{ form.as_p }}
+    </div>
     <input type="submit" value="Submit">
   </form>
 {% endblock %}

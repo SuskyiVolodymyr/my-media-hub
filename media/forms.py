@@ -1,10 +1,9 @@
-from abc import ABC
-
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
-from media.models import UserMovieData, Genre, UserAnimeData, UserSeriesData, UserCartoonData
+from media.models import UserMovieData, Genre, UserAnimeData, UserSeriesData, UserCartoonData, Movie, Anime, Series, \
+    Cartoon
 
 
 class UserMediaDataForm(forms.ModelForm):
@@ -59,9 +58,11 @@ class MediaSearchForm(forms.Form):
         label="",
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Search by title"
+                "placeholder": "Search by title",
+                "class": "search-field"
+
             }
-        )
+        ),
     )
 
 
@@ -75,25 +76,37 @@ class StatusFilterForm(forms.Form):
             ("4", "Finished"),
         ),
         required=False,
-        label="show only",
+        widget=forms.Select(
+            attrs={
+                "class": "custom-select",
+            }
+        )
     )
 
 
 class MediaFilterForm(forms.Form):
     genres = forms.ModelMultipleChoiceField(
         queryset=Genre.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+                "class": "genres-filter"
+            }
+        ),
         required=False,
         label=""
     )
 
 
 class MovieOrderForm(forms.Form):
-
     order = forms.ChoiceField(
         choices=(("title", "Title"), ("-year_released", "Year")),
         required=False,
         label="Sort by",
+        widget=forms.Select(
+            attrs={
+                "class": "custom-select",
+            }
+        )
     )
 
 
@@ -107,4 +120,69 @@ class MediaOrderForm(forms.Form):
         ),
         required=False,
         label="Sort by",
+        widget=forms.Select(
+            attrs={
+                "class": "custom-select",
+            }
+        )
     )
+
+
+class MovieForm(forms.ModelForm):
+    genre = forms.ModelMultipleChoiceField(
+        queryset=Genre.objects.all(),
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+                "class": "genres-filter"
+            }
+        )
+    )
+
+    class Meta:
+        fields = ["title", "year_released", "description", "genre"]
+        model = Movie
+
+
+class AnimeForm(forms.ModelForm):
+    genre = forms.ModelMultipleChoiceField(
+        queryset=Genre.objects.all(),
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+                "class": "genres-filter"
+            }
+        )
+    )
+
+    class Meta:
+        fields = ["title", "year_released", "description", "genre", "seasons", "episodes"]
+        model = Anime
+
+
+class SeriesForm(forms.ModelForm):
+    genre = forms.ModelMultipleChoiceField(
+        queryset=Genre.objects.all(),
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+                "class": "genres-filter"
+            }
+        )
+    )
+
+    class Meta:
+        fields = ["title", "year_released", "description", "genre", "seasons", "episodes"]
+        model = Series
+
+
+class CartoonForm(forms.ModelForm):
+    genre = forms.ModelMultipleChoiceField(
+        queryset=Genre.objects.all(),
+        widget=forms.CheckboxSelectMultiple(
+            attrs={
+                "class": "genres-filter"
+            }
+        )
+    )
+
+    class Meta:
+        fields = ["title", "year_released", "description", "genre", "seasons", "episodes"]
+        model = Cartoon
