@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
 
 from media.models import UserMovieData, Genre, UserAnimeData, UserSeriesData, UserCartoonData, Movie, Anime, Series, \
     Cartoon
@@ -13,12 +14,14 @@ class UserMediaDataForm(forms.ModelForm):
         required=False
     )
 
-    def clean_rate(self):
-        rate = self.cleaned_data["rate"]
-        if rate is not None and not 0 <= rate <= 5:
-            raise forms.ValidationError("Rate must be between 0 and 5")
+    def clean(self):
+        cleaned_data = super().clean()
 
-        return rate
+        rate = cleaned_data.get("rate")
+        if rate is not None and not 0 <= rate <= 5:
+            raise ValidationError("Rate must be between 0 and 5")
+
+        return cleaned_data
 
 
 class UserMovieDataForm(UserMediaDataForm):

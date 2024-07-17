@@ -1,11 +1,19 @@
 from abc import ABC, abstractmethod
 
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth import (
+    authenticate,
+    login,
+    get_user_model
+)
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import (
+    HttpRequest,
+    HttpResponse,
+    HttpResponseRedirect
+)
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
@@ -21,7 +29,10 @@ from media.forms import (
     MediaOrderForm,
     UserSeriesDataForm,
     UserCartoonDataForm,
-    MovieForm, AnimeForm, SeriesForm, CartoonForm,
+    MovieForm,
+    AnimeForm,
+    SeriesForm,
+    CartoonForm,
 )
 from media.models import (
     Movie,
@@ -76,7 +87,7 @@ class UserCreateView(generic.CreateView):
         return super().form_invalid(form)
 
 
-class UserMediaListView(generic.ListView, LoginRequiredMixin, ABC):
+class UserMediaListView(LoginRequiredMixin, generic.ListView, ABC):
     model = None
     paginate_by = 50
 
@@ -112,7 +123,7 @@ class UserMediaListView(generic.ListView, LoginRequiredMixin, ABC):
         return queryset
 
 
-class UserMovieListView(UserMediaListView, LoginRequiredMixin):
+class UserMovieListView(UserMediaListView):
     model = UserMovieData
     template_name = "media/user_movie_list.html"
 
