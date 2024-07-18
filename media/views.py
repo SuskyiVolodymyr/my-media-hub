@@ -93,13 +93,11 @@ class UserMediaListView(LoginRequiredMixin, generic.ListView, ABC):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        title = self.request.GET.get("title", "")
-        show_only = self.request.GET.get("show_only", "")
         context["search_form"] = MediaSearchForm(
-            initial={"title": title}
+            self.request.GET
         )
         context["show_only_form"] = StatusFilterForm(
-            initial={"show_only": show_only}
+            self.request.GET
         )
         return context
 
