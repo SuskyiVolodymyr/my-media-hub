@@ -21,6 +21,9 @@
         Title
       </th>
       <th>
+        Rate
+      </th>
+      <th>
         Genres
       </th>
       <th>
@@ -41,6 +44,11 @@
         <tr>
           <th>
             <a href="{% url 'media:anime-detail' anime.id %}">{{ anime.title }}</a>
+          </th>
+          <th>
+            {% if anime.avg_rate %}
+              {{ anime.avg_rate }}
+            {% endif %}
           </th>
           <th>
             {% for genre in anime.genre.all  %}

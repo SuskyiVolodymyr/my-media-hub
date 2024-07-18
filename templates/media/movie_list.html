@@ -21,6 +21,9 @@
         Title
       </th>
       <th>
+        Rate
+      </th>
+      <th>
         Genres
       </th>
       <th>
@@ -35,6 +38,11 @@
         <tr>
           <th>
             <a href="{% url 'media:movie-detail' movie.id %}">{{ movie.title }}</a>
+          </th>
+          <th>
+            {% if movie.avg_rate %}
+              {{ movie.avg_rate }}
+            {% endif %}
           </th>
           <th>
             {% for genre in movie.genre.all  %}

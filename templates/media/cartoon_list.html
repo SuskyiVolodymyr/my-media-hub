@@ -21,6 +21,9 @@
         Title
       </th>
       <th>
+        Rate
+      </th>
+      <th>
         Genres
       </th>
       <th>
@@ -41,6 +44,11 @@
         <tr>
           <th>
             <a href="{% url 'media:cartoon-detail' cartoon.id %}">{{ cartoon.title }}</a>
+          </th>
+          <th>
+            {% if cartoon.avg_rate %}
+              {{ cartoon.avg_rate }}
+            {% endif %}
           </th>
           <th>
             {% for genre in cartoon.genre.all %}

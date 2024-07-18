@@ -6,6 +6,7 @@
   <a href="{% url 'media:series-delete' series.id %}" class="btn btn-danger">Delete</a>
   </h1>
   <p>Year of release: {{ series.year_released }}</p>
+  <p>Rate: {{ series.avg_rate }}</p>
   <p>Genres: 
     {% for genre in series.genre.all %}
       {{ genre }}

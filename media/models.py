@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Avg
 
 
 class User(AbstractUser):
@@ -66,6 +67,11 @@ class Movie(MediaDescription):
     genre = models.ManyToManyField(Genre, related_name="movies")
     user = models.ManyToManyField(get_user_model(), through=UserMovieData, related_name="movies")
 
+    @property
+    def avg_rate(self):
+        rate = UserMovieData.objects.filter(movie=self).aggregate(Avg("rate", default=0))
+        return round(float(rate["rate__avg"]), 2)
+
     class Meta:
         ordering = ("title", )
 
@@ -76,6 +82,11 @@ class Movie(MediaDescription):
 class Series(MediaDescription):
     genre = models.ManyToManyField(Genre, related_name="series")
     user = models.ManyToManyField(get_user_model(), through=UserSeriesData, related_name="series")
+
+    @property
+    def avg_rate(self):
+        rate = UserSeriesData.objects.filter(series=self).aggregate(Avg("rate", default=0))
+        return round(float(rate["rate__avg"]), 2)
 
     class Meta:
         ordering = ("title", )
@@ -89,6 +100,11 @@ class Anime(MediaDescription):
     genre = models.ManyToManyField(Genre, related_name="anime")
     user = models.ManyToManyField(get_user_model(), through=UserAnimeData, related_name="anime")
 
+    @property
+    def avg_rate(self):
+        rate = UserAnimeData.objects.filter(anime=self).aggregate(Avg("rate", default=0))
+        return round(float(rate["rate__avg"]), 2)
+
     class Meta:
         ordering = ("title", )
         verbose_name_plural = "anime"
@@ -100,6 +116,11 @@ class Anime(MediaDescription):
 class Cartoon(MediaDescription):
     genre = models.ManyToManyField(Genre, related_name="cartoons")
     user = models.ManyToManyField(get_user_model(), through=UserCartoonData, related_name="cartoons")
+
+    @property
+    def avg_rate(self):
+        rate = UserCartoonData.objects.filter(cartoon=self).aggregate(Avg("rate", default=0))
+        return round(float(rate["rate__avg"]), 2)
 
     class Meta:
         ordering = ("title", )
