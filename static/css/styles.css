@@ -81,6 +81,10 @@ input[type="email"] {
   border: 2px solid rgba(0, 0, 0, 30%);
   padding-left: 15px;
   outline: none;
+  height: 40px;
+  font-size: 20px;
+  font-family: 'Roboto Slab', serif;
+  font-weight: 700;
 }
 
 textarea {
@@ -95,6 +99,27 @@ textarea {
   resize: none;
   box-sizing: border-box;
   line-height: 1.5;
+  font-size: 20px;
+  font-family: 'Roboto Slab', serif;
+  font-weight: 700;
+}
+
+select, .custom-select {
+  color: rgba(177, 142, 237, 90%);
+  text-align: center;
+  background: rgba(255, 255, 255, 10%);
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 50%);
+  font-size: 16px;
+  outline: none;
+  height: 35px;
+  width: 20%;
+  font-family: 'Roboto Slab', serif;
+  font-weight: 700;
+}
+
+option {
+  background: #524687;
 }
 
 .media-count {
@@ -146,22 +171,6 @@ textarea {
   border-radius: 20px;
   border: none;
   outline: none;
-}
-
-.custom-select {
-  color: rgba(177, 142, 237, 90%);
-  text-align: center;
-  background: rgba(255, 255, 255, 10%);
-  border-radius: 20px;
-  border: 1px solid rgba(0, 0, 0, 50%);
-  font-size: 16px;
-  outline: none;
-  width: 200px;
-
-}
-
-.custom-select option {
-  background: #524687;
 }
 
 .media-table {
@@ -225,4 +234,46 @@ textarea {
   color: rgba(255, 255, 255, 40%);
   text-align: left;
   font-size: 14px;
+}
+
+.btn-info, .btn-danger {
+  color: rgba(201, 184, 237, 0.9);
+  background-color: rgba(255, 255, 255, 30%);
+  height: 50px;
+  width: 100px;
+  border: 2px solid rgba(255, 255, 255, 20%);
+  font-size: 20px
+}
+
+.btn-danger {
+  background-color: rgba(0, 0, 0, 30%);
+  border: 2px solid rgba(0, 0, 0, 20%);
+}
+
+.btn-info:hover {
+  background-color: rgba(255, 255, 255, 20%);
+  border: 2px solid rgba(255, 255, 255, 10%);
+}
+
+.btn-danger:hover {
+  background-color: rgba(0, 0, 0, 40%);
+  border: 2px solid rgba(0, 0, 0, 30%);
+}
+
+.page-link {
+  color: rgba(201, 184, 237, 0.9);
+  background-color: rgba(0, 0, 0, 30%);
+  border: none;
+}
+
+.page-link:hover {
+  color: rgba(201, 184, 237, 0.9);
+  background-color: rgba(0, 0, 0, 40%);
+  border: none;
+}
+
+.page-item.active .page-link {
+  color: rgba(201, 184, 237, 0.9);
+  background-color: rgba(0, 0, 0, 15%);
+  border: none;
 }
