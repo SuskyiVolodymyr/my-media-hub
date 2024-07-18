@@ -1,6 +1,4 @@
-from django.urls import path
-
-from media.import_views import *
+from media.url_imports import *
 
 urlpatterns = [
     path("", index, name="index"),
