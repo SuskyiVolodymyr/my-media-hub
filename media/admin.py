@@ -33,7 +33,7 @@ class SeriesAdmin(admin.ModelAdmin):
 
 
 @admin.register(Genre)
-class SeriesAdmin(admin.ModelAdmin):
+class GenreAdmin(admin.ModelAdmin):
     search_fields = ["name"]
 
 

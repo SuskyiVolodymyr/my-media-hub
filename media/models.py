@@ -18,7 +18,11 @@ class UserMediaDataMixin(models.Model):
 
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     rate = models.DecimalField(null=True, decimal_places=2, max_digits=3)
-    status = models.CharField(choices=Status.choices, default=Status.want_to_watch, max_length=15)
+    status = models.CharField(
+        choices=Status.choices,
+        default=Status.want_to_watch,
+        max_length=15
+    )
     comment = models.TextField(null=True, blank=True)
 
     class Meta:
@@ -65,11 +69,17 @@ class MediaDescription(models.Model):
 
 class Movie(MediaDescription):
     genre = models.ManyToManyField(Genre, related_name="movies")
-    user = models.ManyToManyField(get_user_model(), through=UserMovieData, related_name="movies")
+    user = models.ManyToManyField(
+        get_user_model(),
+        through=UserMovieData,
+        related_name="movies"
+    )
 
     @property
     def avg_rate(self):
-        rate = UserMovieData.objects.filter(movie=self).aggregate(Avg("rate", default=0))
+        rate = UserMovieData.objects.filter(movie=self).aggregate(
+            Avg("rate", default=0)
+        )
         return round(float(rate["rate__avg"]), 2)
 
     class Meta:
@@ -81,11 +91,17 @@ class Movie(MediaDescription):
 
 class Series(MediaDescription):
     genre = models.ManyToManyField(Genre, related_name="series")
-    user = models.ManyToManyField(get_user_model(), through=UserSeriesData, related_name="series")
+    user = models.ManyToManyField(
+        get_user_model(),
+        through=UserSeriesData,
+        related_name="series"
+    )
 
     @property
     def avg_rate(self):
-        rate = UserSeriesData.objects.filter(series=self).aggregate(Avg("rate", default=0))
+        rate = UserSeriesData.objects.filter(series=self).aggregate(
+            Avg("rate", default=0)
+        )
         return round(float(rate["rate__avg"]), 2)
 
     class Meta:
@@ -98,11 +114,17 @@ class Series(MediaDescription):
 
 class Anime(MediaDescription):
     genre = models.ManyToManyField(Genre, related_name="anime")
-    user = models.ManyToManyField(get_user_model(), through=UserAnimeData, related_name="anime")
+    user = models.ManyToManyField(
+        get_user_model(),
+        through=UserAnimeData,
+        related_name="anime"
+    )
 
     @property
     def avg_rate(self):
-        rate = UserAnimeData.objects.filter(anime=self).aggregate(Avg("rate", default=0))
+        rate = UserAnimeData.objects.filter(anime=self).aggregate(
+            Avg("rate", default=0)
+        )
         return round(float(rate["rate__avg"]), 2)
 
     class Meta:
@@ -115,11 +137,17 @@ class Anime(MediaDescription):
 
 class Cartoon(MediaDescription):
     genre = models.ManyToManyField(Genre, related_name="cartoons")
-    user = models.ManyToManyField(get_user_model(), through=UserCartoonData, related_name="cartoons")
+    user = models.ManyToManyField(
+        get_user_model(),
+        through=UserCartoonData,
+        related_name="cartoons"
+    )
 
     @property
     def avg_rate(self):
-        rate = UserCartoonData.objects.filter(cartoon=self).aggregate(Avg("rate", default=0))
+        rate = UserCartoonData.objects.filter(cartoon=self).aggregate(
+            Avg("rate", default=0)
+        )
         return round(float(rate["rate__avg"]), 2)
 
     class Meta:

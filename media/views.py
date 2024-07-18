@@ -70,19 +70,24 @@ class UserCreateView(generic.CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password1')
+        username = form.cleaned_data.get("username")
+        password = form.cleaned_data.get("password1")
         user = authenticate(username=username, password=password)
         if user is not None:
             login(self.request, user)
         else:
-            messages.error(self.request, 'There was a problem logging you in. Please try again.')
+            messages.error(
+                self.request,
+                "There was a problem logging you in. "
+                "Please try again."
+            )
         return response
 
     def form_invalid(self, form):
         messages.error(
             self.request,
-            'There was an error with your submission. Please check the form and try again.'
+            "There was an error with your submission. "
+            "Please check the form and try again."
         )
         return super().form_invalid(form)
 
@@ -111,8 +116,12 @@ class UserMediaListView(LoginRequiredMixin, generic.ListView, ABC):
         queryset = self.model.objects.filter(user_id=user.id)
         search_form = MediaSearchForm(self.request.GET)
         status_filter_form = StatusFilterForm(self.request.GET)
+
         if search_form.is_valid():
-            queryset = self.media_title_filter(queryset, search_form.cleaned_data["title"])
+            queryset = self.media_title_filter(
+                queryset, search_form.cleaned_data["title"]
+            )
+
         if status_filter_form.is_valid():
             if status_filter_form.cleaned_data.get("show_only"):
                 queryset = queryset.filter(
@@ -188,7 +197,9 @@ class MediaListView(generic.ListView, LoginRequiredMixin, ABC):
         if filter_form.is_valid():
             selected_genres = filter_form.cleaned_data.get("genres", [])
             if selected_genres:
-                queryset = queryset.filter(genre__in=selected_genres).distinct()
+                queryset = queryset.filter(
+                    genre__in=selected_genres
+                ).distinct()
 
         if order_form.is_valid():
             order = order_form.cleaned_data.get("order", "title")
@@ -335,7 +346,7 @@ def update_user_media_data(
         template: str,
         context: dict
 ):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = user_media_data_form(request.POST, instance=user_media_data)
         if form.is_valid():
             form.save()
@@ -381,10 +392,17 @@ def update_user_anime_data_view(request: HttpRequest, pk: int) -> HttpResponse:
 
 
 @login_required
-def update_user_series_data_view(request: HttpRequest, pk: int) -> HttpResponse:
+def update_user_series_data_view(
+        request: HttpRequest,
+        pk: int
+) -> HttpResponse:
     user = request.user
     series = get_object_or_404(Series, id=pk)
-    user_series_data = get_object_or_404(UserSeriesData, user=user, series=series)
+    user_series_data = get_object_or_404(
+        UserSeriesData,
+        user=user,
+        series=series
+    )
     response = reverse_lazy("media:user-series-list")
     template = "media/user_series_data_form.html"
     return update_user_media_data(
@@ -397,10 +415,17 @@ def update_user_series_data_view(request: HttpRequest, pk: int) -> HttpResponse:
     )
 
 
-def update_user_cartoon_data_view(request: HttpRequest, pk: int) -> HttpResponse:
+def update_user_cartoon_data_view(
+        request: HttpRequest,
+        pk: int
+) -> HttpResponse:
     user = request.user
     cartoon = get_object_or_404(Cartoon, id=pk)
-    user_cartoon_data = get_object_or_404(UserCartoonData, user=user, cartoon=cartoon)
+    user_cartoon_data = get_object_or_404(
+        UserCartoonData,
+        user=user,
+        cartoon=cartoon
+    )
     response = reverse_lazy("media:user-cartoon-list")
     template = "media/user_cartoon_data_form.html"
     return update_user_media_data(
@@ -420,7 +445,12 @@ def add_movie(request: HttpRequest, pk: int) -> HttpResponse:
         user.movies.remove(pk)
     else:
         user.movies.add(pk)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse_lazy("media:movie-list")))
+    return HttpResponseRedirect(
+        request.META.get(
+            "HTTP_REFERER",
+            reverse_lazy("media:movie-list")
+        )
+    )
 
 
 @login_required
@@ -430,7 +460,12 @@ def add_anime(request: HttpRequest, pk: int) -> HttpResponse:
         user.anime.remove(pk)
     else:
         user.anime.add(pk)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse_lazy("media:anime-list")))
+    return HttpResponseRedirect(
+        request.META.get(
+            "HTTP_REFERER",
+            reverse_lazy("media:anime-list")
+        )
+    )
 
 
 @login_required
@@ -440,7 +475,12 @@ def add_series(request: HttpRequest, pk: int) -> HttpResponse:
         user.series.remove(pk)
     else:
         user.series.add(pk)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse_lazy("media:series-list")))
+    return HttpResponseRedirect(
+        request.META.get(
+            "HTTP_REFERER",
+            reverse_lazy("media:series-list")
+        )
+    )
 
 
 @login_required
@@ -450,4 +490,9 @@ def add_cartoon(request: HttpRequest, pk: int) -> HttpResponse:
         user.cartoons.remove(pk)
     else:
         user.cartoons.add(pk)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse_lazy("media:cartoon-list")))
+    return HttpResponseRedirect(
+        request.META.get(
+            "HTTP_REFERER",
+            reverse_lazy("media:cartoon-list")
+        )
+    )

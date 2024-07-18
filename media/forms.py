@@ -3,8 +3,17 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from media.models import UserMovieData, Genre, UserAnimeData, UserSeriesData, UserCartoonData, Movie, Anime, Series, \
+from media.models import (
+    UserMovieData,
+    Genre,
+    UserAnimeData,
+    UserSeriesData,
+    UserCartoonData,
+    Movie,
+    Anime,
+    Series,
     Cartoon
+)
 
 
 class UserMediaDataForm(forms.ModelForm):
@@ -157,7 +166,14 @@ class AnimeForm(forms.ModelForm):
     )
 
     class Meta:
-        fields = ["title", "year_released", "description", "genre", "seasons", "episodes"]
+        fields = [
+            "title",
+            "year_released",
+            "description",
+            "genre",
+            "seasons",
+            "episodes"
+        ]
         model = Anime
 
 
@@ -172,7 +188,14 @@ class SeriesForm(forms.ModelForm):
     )
 
     class Meta:
-        fields = ["title", "year_released", "description", "genre", "seasons", "episodes"]
+        fields = [
+            "title",
+            "year_released",
+            "description",
+            "genre",
+            "seasons",
+            "episodes"
+        ]
         model = Series
 
 
@@ -187,5 +210,12 @@ class CartoonForm(forms.ModelForm):
     )
 
     class Meta:
-        fields = ["title", "year_released", "description", "genre", "seasons", "episodes"]
+        fields = [
+            "title",
+            "year_released",
+            "description",
+            "genre",
+            "seasons",
+            "episodes"
+        ]
         model = Cartoon
