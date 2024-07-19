@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from media.models import UserMovieData, UserAnimeData, Movie
+from media.models import UserMovieData, UserAnimeData, Movie, Genre, Anime
 from media.tests.base import TestBaseSetUp
 
 
@@ -28,9 +28,6 @@ class TestUserMediaListView(TestBaseSetUp):
         super().setUp()
         self.client.force_login(self.user)
         self.user_movie_url = reverse("media:user-movie-list")
-        self.user_anime_url = reverse("media:user-anime-list")
-        self.user_series_url = reverse("media:user-series-list")
-        self.user_cartoon_url = reverse("media:user-cartoon-list")
 
     def test_user_media_search_form(self):
         res = self.client.get(self.user_movie_url, {"title": "1"})
@@ -69,3 +66,102 @@ class TestUserMediaListView(TestBaseSetUp):
             res.context["object_list"],
             expected_movies
         )
+
+
+class MediaListView(TestBaseSetUp):
+    def setUp(self):
+        super().setUp()
+        self.client.force_login(self.user)
+        self.movie_list_url = reverse("media:movie-list")
+        self.new_genre1 = Genre.objects.create(name="Test_genre1")
+        self.new_genre2 = Genre.objects.create(name="Test_genre2")
+        for i in range(1, 6):
+            movie = Movie.objects.get(id=i)
+            if i < 4:
+                movie.genre.add(self.new_genre1)
+            else:
+                movie.genre.add(self.new_genre2)
+
+    def test_media_search_form(self):
+        res = self.client.get(self.movie_list_url, {"title": "1"})
+        search_form = res.context.get('search_form')
+        if not search_form:
+            self.fail("Search form is not in the context")
+        self.assertTrue(search_form.is_valid(), msg=f"Errors: {search_form.errors}")
+        expected_movies = Movie.objects.filter(title__icontains="1")
+        self.assertQuerysetEqual(
+            res.context["object_list"],
+            expected_movies
+        )
+
+    def test_media_filter_form(self):
+        res = self.client.get(
+            self.movie_list_url,
+            {"genres": [self.new_genre1.id, self.new_genre2.id]}
+        )
+        filter_form = res.context.get('filter_form')
+        if not filter_form:
+            self.fail("Search form is not in the context")
+        self.assertTrue(filter_form.is_valid(), msg=f"Errors: {filter_form.errors}")
+        self.assertEqual(len(res.context["object_list"]), 5)
+
+    def test_movie_order_form_by_title(self):
+        res = self.client.get(self.movie_list_url, {"order": "title"})
+        order_form = res.context.get('order_form')
+        if not order_form:
+            self.fail("Search form is not in the context")
+        self.assertTrue(order_form.is_valid(), msg=f"Errors: {order_form.errors}")
+        self.assertQuerysetEqual(
+            res.context["object_list"],
+            Movie.objects.order_by("title")
+        )
+
+    def test_movie_order_form_by_year_released(self):
+        res = self.client.get(self.movie_list_url, {"order": "-year_released"})
+        self.assertQuerysetEqual(
+            res.context["object_list"],
+            Movie.objects.order_by("-year_released")
+        )
+
+    def test_media_order_form_by_seasons_and_episodes(self):
+        for i in range(1, 10):
+            anime = Anime.objects.get(id=1)
+            anime.seasons = i % 3
+            anime.episodes = i % 2
+            anime.save()
+        res = self.client.get(reverse("media:anime-list"), {"order": "-seasons"})
+        self.assertQuerysetEqual(
+            res.context["object_list"],
+            Anime.objects.order_by("-seasons")
+        )
+        res = self.client.get(reverse("media:anime-list"), {"order": "-episodes"})
+        self.assertQuerysetEqual(
+            res.context["object_list"],
+            Anime.objects.order_by("-episodes")
+        )
+
+    def test_all_filters_togather(self):
+        new_movie = Movie.objects.create(title="Test_111", year_released=2024)
+        new_movie.genre.add(self.new_genre1)
+        res = self.client.get(
+            self.movie_list_url,
+            {
+                "title": "1",
+                "genres": [self.new_genre1.id, self.new_genre2.id],
+                "order": "-year_released"
+            }
+        )
+        self.assertQuerysetEqual(
+            res.context["object_list"],
+            Movie.objects.filter(title__icontains="1").order_by("-year_released")
+        )
+        self.assertEqual(len(res.context["object_list"]), 2)
+
+    def test_add_media_to_user_list(self):
+        self.client.get(reverse("media:movie-add", kwargs={"pk": 1}))
+        movie = Movie.objects.get(id=1)
+        self.assertNotIn(self.user, movie.user.all())
+        self.client.get(reverse("media:movie-add", kwargs={"pk": 1}))
+        self.assertIn(self.user, movie.user.all())
+
+

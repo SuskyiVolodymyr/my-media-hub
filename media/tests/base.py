@@ -18,7 +18,7 @@ class TestBaseSetUp(TestCase):
             self.user.movies.add(movie)
         for i in range(9):
             anime = Anime.objects.create(
-                title=f"Test{1}",
+                title=f"Test{i}",
             )
             self.user.anime.add(anime)
         for i in range(8):
