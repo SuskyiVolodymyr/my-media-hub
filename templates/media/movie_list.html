@@ -40,9 +40,7 @@
             <a href="{% url 'media:movie-detail' movie.id %}">{{ movie.title }}</a>
           </th>
           <th>
-            {% if movie.avg_rate %}
-              {{ movie.avg_rate }}
-            {% endif %}
+            {{ movie.average_rate|default_if_none:"N/A" }}
           </th>
           <th>
             {% for genre in movie.genre.all  %}
@@ -54,7 +52,7 @@
             {{ movie.year_released }}
           </th>
           <th>
-            {% if movie in user.movies.all %}
+            {% if movie in user_movies %}
               <a href="{% url 'media:movie-add' movie.id %}">Remove from list</a>
             {% else %}
               <a href="{% url 'media:movie-add' movie.id %}">Add to list</a>

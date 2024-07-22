@@ -46,9 +46,7 @@
             <a href="{% url 'media:cartoon-detail' cartoon.id %}">{{ cartoon.title }}</a>
           </th>
           <th>
-            {% if cartoon.avg_rate %}
-              {{ cartoon.avg_rate }}
-            {% endif %}
+            {{ cartoon.average_rate|floatformat:2|default_if_none:"N/A" }}
           </th>
           <th>
             {% for genre in cartoon.genre.all %}
@@ -66,7 +64,7 @@
             {{ cartoon.year_released }}
           </th>
           <th>
-            {% if cartoon in user.cartoons.all %}
+            {% if cartoon in user_cartoon %}
               <a href="{% url 'media:cartoon-add' cartoon.id %}">Remove from list</a>
             {% else %}
               <a href="{% url 'media:cartoon-add' cartoon.id %}">Add to list</a>

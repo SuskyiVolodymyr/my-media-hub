@@ -75,13 +75,6 @@ class Movie(MediaDescription):
         related_name="movies"
     )
 
-    @property
-    def avg_rate(self):
-        rate = UserMovieData.objects.filter(movie=self).aggregate(
-            Avg("rate", default=0)
-        )
-        return round(float(rate["rate__avg"]), 2)
-
     class Meta:
         ordering = ("title", )
 
@@ -96,13 +89,6 @@ class Series(MediaDescription):
         through=UserSeriesData,
         related_name="series"
     )
-
-    @property
-    def avg_rate(self):
-        rate = UserSeriesData.objects.filter(series=self).aggregate(
-            Avg("rate", default=0)
-        )
-        return round(float(rate["rate__avg"]), 2)
 
     class Meta:
         ordering = ("title", )
@@ -120,12 +106,6 @@ class Anime(MediaDescription):
         related_name="anime"
     )
 
-    @property
-    def avg_rate(self):
-        rate = UserAnimeData.objects.filter(anime=self).aggregate(
-            Avg("rate", default=0)
-        )
-        return round(float(rate["rate__avg"]), 2)
 
     class Meta:
         ordering = ("title", )
@@ -143,12 +123,6 @@ class Cartoon(MediaDescription):
         related_name="cartoons"
     )
 
-    @property
-    def avg_rate(self):
-        rate = UserCartoonData.objects.filter(cartoon=self).aggregate(
-            Avg("rate", default=0)
-        )
-        return round(float(rate["rate__avg"]), 2)
 
     class Meta:
         ordering = ("title", )

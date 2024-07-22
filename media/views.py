@@ -8,7 +8,7 @@ from django.contrib.auth import (
 )
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Avg
 from django.http import (
     HttpRequest,
     HttpResponse,
@@ -113,7 +113,7 @@ class UserMediaListView(LoginRequiredMixin, generic.ListView, ABC):
 
     def get_queryset(self):
         user = get_user_model().objects.get(id=self.request.user.id)
-        queryset = self.model.objects.filter(user_id=user.id)
+        queryset = self.model.objects.filter(user_id=user.id).prefetch_related(self.table)
         search_form = MediaSearchForm(self.request.GET)
         status_filter_form = StatusFilterForm(self.request.GET)
 
@@ -133,6 +133,7 @@ class UserMediaListView(LoginRequiredMixin, generic.ListView, ABC):
 class UserMovieListView(UserMediaListView):
     model = UserMovieData
     template_name = "media/user_movie_list.html"
+    table = "movie"
 
     @staticmethod
     def media_title_filter(queryset: QuerySet, filter_by: str) -> QuerySet:
@@ -142,6 +143,7 @@ class UserMovieListView(UserMediaListView):
 class UserAnimeListView(UserMediaListView):
     model = UserAnimeData
     template_name = "media/user_anime_list.html"
+    table = "anime"
 
     @staticmethod
     def media_title_filter(queryset: QuerySet, filter_by: str) -> QuerySet:
@@ -151,6 +153,7 @@ class UserAnimeListView(UserMediaListView):
 class UserSeriesListView(UserMediaListView):
     model = UserSeriesData
     template_name = "media/user_series_list.html"
+    table = "series"
 
     @staticmethod
     def media_title_filter(queryset: QuerySet, filter_by: str) -> QuerySet:
@@ -160,6 +163,7 @@ class UserSeriesListView(UserMediaListView):
 class UserCartoonListView(UserMediaListView):
     model = UserCartoonData
     template_name = "media/user_cartoon_list.html"
+    table = "cartoon"
 
     @staticmethod
     def media_title_filter(queryset: QuerySet, filter_by: str) -> QuerySet:
@@ -213,20 +217,56 @@ class MovieListView(MediaListView):
     model = Movie
     order_form = MovieOrderForm
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context["user_movies"] = self.request.user.movies.all()
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.annotate(average_rate=Avg("usermoviedata__rate"))
+
 
 class AnimeListView(MediaListView):
     model = Anime
     order_form = MediaOrderForm
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context["user_anime"] = self.request.user.anime.all()
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.annotate(average_rate=Avg("useranimedata__rate"))
 
 
 class SeriesListView(MediaListView):
     model = Series
     order_form = MediaOrderForm
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context["user_series"] = self.request.user.series.all()
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.annotate(average_rate=Avg("userseriesdata__rate"))
+
 
 class CartoonListView(MediaListView):
     model = Cartoon
     order_form = MediaOrderForm
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        context["user_cartoon"] = self.request.user.cartoons.all()
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.annotate(average_rate=Avg("usercartoondata__rate"))
 
 
 class MovieDetailView(generic.DetailView, LoginRequiredMixin):

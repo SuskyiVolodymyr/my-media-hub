@@ -46,9 +46,7 @@
             <a href="{% url 'media:series-detail' series.id %}">{{ series.title }}</a>
           </th>
           <th>
-            {% if series.avg_rate %}
-              {{ series.avg_rate }}
-            {% endif %}
+            {{ series.average_rate|floatformat:2|default_if_none:"N/A" }}
           </th>
           <th>
             {% for genre in series.genre.all %}
@@ -66,7 +64,7 @@
             {{ series.year_released }}
           </th>
           <th>
-            {% if series in user.series.all %}
+            {% if series in user_series%}
               <a href="{% url 'media:series-add' series.id %}">Remove from list</a>
             {% else %}
               <a href="{% url 'media:series-add' series.id %}">Add to list</a>
