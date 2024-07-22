@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import Avg
 
 
 class User(AbstractUser):
@@ -106,7 +105,6 @@ class Anime(MediaDescription):
         related_name="anime"
     )
 
-
     class Meta:
         ordering = ("title", )
         verbose_name_plural = "anime"
@@ -122,7 +120,6 @@ class Cartoon(MediaDescription):
         through=UserCartoonData,
         related_name="cartoons"
     )
-
 
     class Meta:
         ordering = ("title", )

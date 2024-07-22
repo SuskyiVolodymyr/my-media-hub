@@ -113,7 +113,9 @@ class UserMediaListView(LoginRequiredMixin, generic.ListView, ABC):
 
     def get_queryset(self):
         user = get_user_model().objects.get(id=self.request.user.id)
-        queryset = self.model.objects.filter(user_id=user.id).prefetch_related(self.table)
+        queryset = self.model.objects.filter(
+            user_id=user.id
+        ).prefetch_related(self.table)
         search_form = MediaSearchForm(self.request.GET)
         status_filter_form = StatusFilterForm(self.request.GET)
 
