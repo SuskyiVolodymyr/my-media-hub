@@ -40,7 +40,7 @@
             <a href="{% url 'media:movie-detail' movie.id %}">{{ movie.title }}</a>
           </th>
           <th>
-            {{ movie.average_rate|default_if_none:"N/A" }}
+            {{ movie.average_rate|floatformat:2|default_if_none:"N/A" }}
           </th>
           <th>
             {% for genre in movie.genre.all  %}
