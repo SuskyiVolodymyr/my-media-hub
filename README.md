@@ -1,6 +1,13 @@
 # MyMediaHub
 MyMediaHub is a web application that allows users to create and manage lists of their favorite movies, anime, series, and cartoons. Users can rate, comment, and set statuses (watching, finished, planning to watch, dropped) for each item.
 
+## Check it out
+[My Media Hub project deployed to Render](https://my-media-hub.onrender.com)
+
+Test user:
+- login : TestUser
+- password: Test_password_1234
+
 ## Features
 - User Authentication: Secure user login and registration.
 - Media Management: Users can add, update, and remove items from their lists.
