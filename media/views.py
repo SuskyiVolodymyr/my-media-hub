@@ -295,6 +295,11 @@ class MovieUpdateView(LoginRequiredMixin, generic.UpdateView):
         movie_id = self.object.id
         return reverse_lazy("media:movie-detail", kwargs={"pk": movie_id})
 
+    def form_invalid(self, form):
+        response = self.render_to_response(self.get_context_data(form=form))
+        response.status_code = 400
+        return response
+
 
 class AnimeUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Anime
@@ -303,6 +308,11 @@ class AnimeUpdateView(LoginRequiredMixin, generic.UpdateView):
     def get_success_url(self):
         anime_id = self.object.id
         return reverse_lazy("media:anime-detail", kwargs={"pk": anime_id})
+
+    def form_invalid(self, form):
+        response = self.render_to_response(self.get_context_data(form=form))
+        response.status_code = 400
+        return response
 
 
 class SeriesUpdateView(LoginRequiredMixin, generic.UpdateView):
@@ -313,6 +323,11 @@ class SeriesUpdateView(LoginRequiredMixin, generic.UpdateView):
         series_id = self.object.id
         return reverse_lazy("media:series-detail", kwargs={"pk": series_id})
 
+    def form_invalid(self, form):
+        response = self.render_to_response(self.get_context_data(form=form))
+        response.status_code = 400
+        return response
+
 
 class CartoonUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Cartoon
@@ -321,6 +336,11 @@ class CartoonUpdateView(LoginRequiredMixin, generic.UpdateView):
     def get_success_url(self):
         cartoon_id = self.object.id
         return reverse_lazy("media:cartoon-detail", kwargs={"pk": cartoon_id})
+
+    def form_invalid(self, form):
+        response = self.render_to_response(self.get_context_data(form=form))
+        response.status_code = 400
+        return response
 
 
 class MovieCreateView(LoginRequiredMixin, generic.CreateView):
@@ -331,6 +351,10 @@ class MovieCreateView(LoginRequiredMixin, generic.CreateView):
         movie_id = self.object.id
         return reverse_lazy("media:movie-detail", kwargs={"pk": movie_id})
 
+    def form_invalid(self, form):
+        response = self.render_to_response(self.get_context_data(form=form))
+        response.status_code = 400
+        return response
 
 class AnimeCreateView(LoginRequiredMixin, generic.CreateView):
     model = Anime
@@ -339,6 +363,11 @@ class AnimeCreateView(LoginRequiredMixin, generic.CreateView):
     def get_success_url(self):
         anime_id = self.object.id
         return reverse_lazy("media:anime-detail", kwargs={"pk": anime_id})
+
+    def form_invalid(self, form):
+        response = self.render_to_response(self.get_context_data(form=form))
+        response.status_code = 400
+        return response
 
 
 class SeriesCreateView(LoginRequiredMixin, generic.CreateView):
@@ -349,6 +378,11 @@ class SeriesCreateView(LoginRequiredMixin, generic.CreateView):
         series_id = self.object.id
         return reverse_lazy("media:series-detail", kwargs={"pk": series_id})
 
+    def form_invalid(self, form):
+        response = self.render_to_response(self.get_context_data(form=form))
+        response.status_code = 400
+        return response
+
 
 class CartoonCreateView(LoginRequiredMixin, generic.CreateView):
     model = Cartoon
@@ -357,6 +391,11 @@ class CartoonCreateView(LoginRequiredMixin, generic.CreateView):
     def get_success_url(self):
         cartoon_id = self.object.id
         return reverse_lazy("media:cartoon-detail", kwargs={"pk": cartoon_id})
+
+    def form_invalid(self, form):
+        response = self.render_to_response(self.get_context_data(form=form))
+        response.status_code = 400
+        return response
 
 
 class MovieDeleteView(LoginRequiredMixin, generic.DeleteView):

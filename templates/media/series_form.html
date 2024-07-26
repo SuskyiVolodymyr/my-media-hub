@@ -4,7 +4,7 @@
   <h1>
     {{ object|yesno:"Update,Create" }} series
     {% if object %}
-    <br>"{{ series.title }}"
+      <br>"{{ series.title }}"
     {% endif %}
   </h1>
   <form action="" method="post" novalidate>
@@ -25,11 +25,23 @@
     {{ form.episodes }}
     <br>
     <details>
-    <summary class="order-summary">Genres</summary>
-    <div class="genres-columns">
-      {{ form.genre }}
-    </div>
+      <summary class="order-summary">Genres</summary>
+      <div class="genres-columns">
+        {{ form.genre }}
+      </div>
     </details>
     <input type="submit" value="Submit" class="btn btn-primary">
   </form>
+  {% if form.errors %}
+    <ul>
+      {% for field in form %}
+        {% for error in field.errors %}
+          <li>{{ field.label }}: {{ error }}</li>
+        {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 {% endblock %}
