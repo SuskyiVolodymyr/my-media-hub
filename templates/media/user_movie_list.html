@@ -35,7 +35,7 @@
       {% for movie_data in usermoviedata_list %}
         <tr>
           <th>
-            <a href="{% url 'media:movie-detail' movie_data.movie.id %}">{{ movie_data.movie.title }}</a>
+            <a href="{% url 'media:movie-detail' pk=movie_data.movie.id %}">{{ movie_data.movie.title }}</a>
           </th>
           <th>
             {% if movie_data.rate %}
@@ -49,10 +49,10 @@
             {% if movie_data.comment %}{{ movie_data.comment }}{% else %}{% endif %}
           </th>
           <th>
-            <a href="{% url 'media:user-movie-data-update' movie_data.movie.id %}">Update</a>
+            <a href="{% url 'media:user-movie-data-update' pk=movie_data.movie.id %}">Update</a>
           </th>
           <th>
-            <a href="{% url 'media:movie-add' movie_data.movie.id %}">Remove</a>
+            <a href="{% url 'media:movie-add' pk=movie_data.movie.id %}">Remove</a>
           </th>
         </tr>
       {% endfor %}

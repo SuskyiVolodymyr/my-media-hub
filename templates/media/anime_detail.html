@@ -2,8 +2,8 @@
 {% block content %}
   <h1>{{ anime.title }}
   <br>
-  <a href="{% url 'media:anime-update' anime.id %}" class="btn btn-info">Update</a>
-  <a href="{% url 'media:anime-delete' anime.id %}" class="btn btn-danger">Delete</a>
+  <a href="{% url 'media:anime-update' pk=anime.id %}" class="btn btn-info">Update</a>
+  <a href="{% url 'media:anime-delete' pk=anime.id %}" class="btn btn-danger">Delete</a>
   </h1>
   <p>Year of release: {{ anime.year_released }}</p>
   <p>Rate: {{ anime.avg_rate }}</p>

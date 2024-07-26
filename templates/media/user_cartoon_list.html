@@ -35,7 +35,7 @@
       {% for cartoon_data in usercartoondata_list %}
         <tr>
           <th>
-            <a href="{% url 'media:cartoon-detail' cartoon_data.cartoon.id %}">{{ cartoon_data.cartoon.title }}</a>
+            <a href="{% url 'media:cartoon-detail' pk=cartoon_data.cartoon.id %}">{{ cartoon_data.cartoon.title }}</a>
           </th>
           <th>
             {% if cartoon_data.rate %}
@@ -49,10 +49,10 @@
             {% if cartoon_data.comment %}{{ cartoon_data.comment }}{% else %}{% endif %}
           </th>
           <th>
-            <a href="{% url 'media:user-cartoon-data-update' cartoon_data.cartoon.id %}">Update</a>
+            <a href="{% url 'media:user-cartoon-data-update' pk=cartoon_data.cartoon.id %}">Update</a>
           </th>
           <th>
-            <a href="{% url 'media:cartoon-add' cartoon_data.cartoon.id %}">Remove</a>
+            <a href="{% url 'media:cartoon-add' pk=cartoon_data.cartoon.id %}">Remove</a>
           </th>
         </tr>
       {% endfor %}

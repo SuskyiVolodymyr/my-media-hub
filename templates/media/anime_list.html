@@ -43,7 +43,7 @@
       {% for anime in anime_list %}
         <tr>
           <th>
-            <a href="{% url 'media:anime-detail' anime.id %}">{{ anime.title }}</a>
+            <a href="{% url 'media:anime-detail' pk=anime.id %}">{{ anime.title }}</a>
           </th>
           <th>
             {{ anime.average_rate|floatformat:2|default_if_none:"N/A" }}
@@ -65,9 +65,9 @@
           </th>
           <th>
             {% if anime in user_anime %}
-              <a href="{% url 'media:anime-add' anime.id %}">Remove from list</a>
+              <a href="{% url 'media:anime-add' pk=anime.id %}">Remove from list</a>
             {% else %}
-              <a href="{% url 'media:anime-add' anime.id %}">Add to list</a>
+              <a href="{% url 'media:anime-add' pk=anime.id %}">Add to list</a>
             {% endif %}
           </th>
         </tr>

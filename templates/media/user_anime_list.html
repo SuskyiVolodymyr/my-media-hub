@@ -34,7 +34,7 @@
       {% for anime_data in useranimedata_list %}
         <tr>
           <th>
-            <a href="{% url 'media:anime-detail' anime_data.anime.id %}">{{ anime_data.anime.title }}</a>
+            <a href="{% url 'media:anime-detail' pk=anime_data.anime.id %}">{{ anime_data.anime.title }}</a>
           </th>
           <th>
             {% if anime_data.rate %}
@@ -48,10 +48,10 @@
             {% if anime_data.comment %}{{ anime_data.comment }}{% else %}{% endif %}
           </th>
           <th>
-            <a href="{% url 'media:user-anime-data-update' anime_data.anime.id %}">Update</a>
+            <a href="{% url 'media:user-anime-data-update' pk=anime_data.anime.id %}">Update</a>
           </th>
           <th>
-            <a href="{% url 'media:anime-add' anime_data.anime.id %}">Remove</a>
+            <a href="{% url 'media:anime-add' pk=anime_data.anime.id %}">Remove</a>
           </th>
         </tr>
       {% endfor %}

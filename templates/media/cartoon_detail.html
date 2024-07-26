@@ -2,8 +2,8 @@
 {% block content %}
   <h1>{{ cartoon.title }}
   <br>
-  <a href="{% url 'media:cartoon-update' cartoon.id %}" class="btn btn-info">Update</a>
-  <a href="{% url 'media:cartoon-delete' cartoon.id %}" class="btn btn-danger">Delete</a>
+  <a href="{% url 'media:cartoon-update' pk=cartoon.id %}" class="btn btn-info">Update</a>
+  <a href="{% url 'media:cartoon-delete' pk=cartoon.id %}" class="btn btn-danger">Delete</a>
   </h1>
   <p>Year of release: {{ cartoon.year_released }}</p>
   <p>Rate: {{ cartoon.avg_rate }}</p>

@@ -35,7 +35,7 @@
       {% for series_data in userseriesdata_list %}
         <tr>
           <th>
-            <a href="{% url 'media:series-detail' series_data.series.id %}">{{ series_data.series.title }}</a>
+            <a href="{% url 'media:series-detail' pk=series_data.series.id %}">{{ series_data.series.title }}</a>
           </th>
           <th>
             {% if series_data.rate %}
@@ -49,10 +49,10 @@
             {% if series_data.comment %}{{ series_data.comment }}{% else %}{% endif %}
           </th>
           <th>
-            <a href="{% url 'media:user-series-data-update' series_data.series.id %}">Update</a>
+            <a href="{% url 'media:user-series-data-update' pk=series_data.series.id %}">Update</a>
           </th>
           <th>
-            <a href="{% url 'media:series-add' series_data.series.id %}">Remove</a>
+            <a href="{% url 'media:series-add' pk=series_data.series.id %}">Remove</a>
           </th>
         </tr>
       {% endfor %}
