@@ -6,44 +6,44 @@ urlpatterns = [
         index,
         name="index"),
     path(
-        "user/create",
+        "users/create",
         UserCreateView.as_view(),
-        name="user-create"),
+        name="users-create"),
     path(
         "user_movies/",
         UserMovieListView.as_view(),
-        name="user-movie-list"),
+        name="user-movies-list"),
     path(
-        "user_movie_data/<int:pk>/update/",
+        "user_movies_data/<int:pk>/update/",
         update_user_movie_data_view,
-        name="user-movie-data-update"
+        name="user-movies-data-update"
     ),
     path(
         "movies/",
         MovieListView.as_view(),
-        name="movie-list"),
+        name="movies-list"),
     path(
         "movies/<int:pk>/add_movie",
         add_movie,
-        name="movie-add"),
+        name="movies-add"),
     path(
-        "movie/create",
+        "movies/create",
         MovieCreateView.as_view(),
-        name="movie-create"),
+        name="movies-create"),
     path(
-        "movie/<int:pk>/detail/",
+        "movies/<int:pk>/detail/",
         MovieDetailView.as_view(),
-        name="movie-detail"
+        name="movies-detail"
     ),
     path(
-        "movie/<int:pk>/update/",
+        "movies/<int:pk>/update/",
         MovieUpdateView.as_view(),
-        name="movie-update"
+        name="movies-update"
     ),
     path(
-        "movie/<int:pk>/delete",
+        "movies/<int:pk>/delete",
         MovieDeleteView.as_view(),
-        name="movie-delete"
+        name="movies-delete"
     ),
     path(
         "user_anime/",
@@ -127,42 +127,42 @@ urlpatterns = [
     path(
         "user_cartoons/",
         UserCartoonListView.as_view(),
-        name="user-cartoon-list"
+        name="user-cartoons-list"
     ),
     path(
-        "user_cartoon_data/<int:pk>/update/",
+        "user_cartoons_data/<int:pk>/update/",
         update_user_cartoon_data_view,
-        name="user-cartoon-data-update"
+        name="user-cartoons-data-update"
     ),
     path(
         "cartoons/",
         CartoonListView.as_view(),
-        name="cartoon-list"
+        name="cartoons-list"
     ),
     path(
         "cartoons/<int:pk>/add_cartoon",
         add_cartoon,
-        name="cartoon-add"
+        name="cartoons-add"
     ),
     path(
-        "cartoon/create",
+        "cartoons/create",
         CartoonCreateView.as_view(),
-        name="cartoon-create"
+        name="cartoons-create"
     ),
     path(
-        "cartoon/<int:pk>/detail",
+        "cartoons/<int:pk>/detail",
         CartoonDetailView.as_view(),
-        name="cartoon-detail"
+        name="cartoons-detail"
     ),
     path(
-        "cartoon/<int:pk>/update/",
+        "cartoons/<int:pk>/update/",
         CartoonUpdateView.as_view(),
-        name="cartoon-update"
+        name="cartoons-update"
     ),
     path(
-        "cartoon/<int:pk>/delete",
+        "cartoons/<int:pk>/delete",
         CartoonDeleteView.as_view(),
-        name="cartoon-delete"
+        name="cartoons-delete"
     ),
 
 ]

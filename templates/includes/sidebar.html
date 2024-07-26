@@ -11,7 +11,7 @@
   {% else %}
     <li class="list-group-item sidebar-item">
       <a class="sidebar-link" href="{% url 'login'%}">Login</a>
-      <a class="sidebar-link" href="{% url "media:user-create" %}">Sign up</a>
+      <a class="sidebar-link" href="{% url 'media:users-create' %}">Sign up</a>
     </li>
   {% endif %}
 
@@ -19,7 +19,7 @@
     <a class="sidebar-link" href="{% url 'media:index' %}">Home</a>
   </li>
   <li class="list-group-item sidebar-item">
-    <a class="sidebar-link" href="{% url 'media:user-movie-list' %}">Movies</a>
+    <a class="sidebar-link" href="{% url 'media:user-movies-list' %}">Movies</a>
   </li>
   <li class="list-group-item sidebar-item">
     <a class="sidebar-link" href="{% url "media:user-anime-list" %}">Anime</a>
@@ -28,6 +28,6 @@
     <a class="sidebar-link" href="{% url "media:user-series-list" %}">Series</a>
   </li>
   <li class="list-group-item sidebar-item">
-    <a class="sidebar-link" href="{% url "media:user-cartoon-list" %}">Cartoons</a>
+    <a class="sidebar-link" href="{% url "media:user-cartoons-list" %}">Cartoons</a>
   </li>
 </ul>

@@ -43,7 +43,7 @@
       {% for cartoon in cartoon_list %}
         <tr>
           <th>
-            <a href="{% url 'media:cartoon-detail' pk=cartoon.id %}">{{ cartoon.title }}</a>
+            <a href="{% url 'media:cartoons-detail' pk=cartoon.id %}">{{ cartoon.title }}</a>
           </th>
           <th>
             {{ cartoon.average_rate|floatformat:2|default_if_none:"N/A" }}
@@ -65,9 +65,9 @@
           </th>
           <th>
             {% if cartoon in user_cartoon %}
-              <a href="{% url 'media:cartoon-add' pk=cartoon.id %}">Remove from list</a>
+              <a href="{% url 'media:cartoons-add' pk=cartoon.id %}">Remove from list</a>
             {% else %}
-              <a href="{% url 'media:cartoon-add' pk=cartoon.id %}">Add to list</a>
+              <a href="{% url 'media:cartoons-add' pk=cartoon.id %}">Add to list</a>
             {% endif %}
           </th>
         </tr>
@@ -76,5 +76,5 @@
   </table>
 {% endblock %}
 {% block content-after %}
-  <h3><a href="{% url "media:cartoon-create" %}" class="create-media">Can't find cartoon? Click here to create new one</a></h3>
+  <h3><a href="{% url "media:cartoons-create" %}" class="create-media">Can't find cartoon? Click here to create new one</a></h3>
 {% endblock %}

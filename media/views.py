@@ -293,7 +293,7 @@ class MovieUpdateView(LoginRequiredMixin, generic.UpdateView):
 
     def get_success_url(self):
         movie_id = self.object.id
-        return reverse_lazy("media:movie-detail", kwargs={"pk": movie_id})
+        return reverse_lazy("movies-detail", kwargs={"pk": movie_id})
 
     def form_invalid(self, form):
         response = self.render_to_response(self.get_context_data(form=form))
@@ -335,7 +335,7 @@ class CartoonUpdateView(LoginRequiredMixin, generic.UpdateView):
 
     def get_success_url(self):
         cartoon_id = self.object.id
-        return reverse_lazy("media:cartoon-detail", kwargs={"pk": cartoon_id})
+        return reverse_lazy("cartoons-detail", kwargs={"pk": cartoon_id})
 
     def form_invalid(self, form):
         response = self.render_to_response(self.get_context_data(form=form))
@@ -349,7 +349,7 @@ class MovieCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_success_url(self):
         movie_id = self.object.id
-        return reverse_lazy("media:movie-detail", kwargs={"pk": movie_id})
+        return reverse_lazy("movies-detail", kwargs={"pk": movie_id})
 
     def form_invalid(self, form):
         response = self.render_to_response(self.get_context_data(form=form))
@@ -390,7 +390,7 @@ class CartoonCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_success_url(self):
         cartoon_id = self.object.id
-        return reverse_lazy("media:cartoon-detail", kwargs={"pk": cartoon_id})
+        return reverse_lazy("cartoons-detail", kwargs={"pk": cartoon_id})
 
     def form_invalid(self, form):
         response = self.render_to_response(self.get_context_data(form=form))
@@ -400,7 +400,7 @@ class CartoonCreateView(LoginRequiredMixin, generic.CreateView):
 
 class MovieDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Movie
-    success_url = reverse_lazy("media:movie-list")
+    success_url = reverse_lazy("movies-list")
 
 
 class AnimeDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -415,7 +415,7 @@ class SeriesDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 class CartoonDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Cartoon
-    success_url = reverse_lazy("media:cartoon-list")
+    success_url = reverse_lazy("cartoons-list")
 
 
 @login_required
@@ -443,7 +443,7 @@ def update_user_movie_data_view(request: HttpRequest, pk: int) -> HttpResponse:
     user = request.user
     movie = get_object_or_404(Movie, id=pk)
     user_movie_data = get_object_or_404(UserMovieData, user=user, movie=movie)
-    response = reverse_lazy("media:user-movie-list")
+    response = reverse_lazy("user-movies-list")
     template = "media/user_movie_data_form.html"
     return update_user_media_data(
         request=request,
@@ -507,7 +507,7 @@ def update_user_cartoon_data_view(
         user=user,
         cartoon=cartoon
     )
-    response = reverse_lazy("media:user-cartoon-list")
+    response = reverse_lazy("user-cartoons-list")
     template = "media/user_cartoon_data_form.html"
     return update_user_media_data(
         request=request,
@@ -529,7 +529,7 @@ def add_movie(request: HttpRequest, pk: int) -> HttpResponse:
     return HttpResponseRedirect(
         request.META.get(
             "HTTP_REFERER",
-            reverse_lazy("media:movie-list")
+            reverse_lazy("movies-list")
         )
     )
 
@@ -574,6 +574,6 @@ def add_cartoon(request: HttpRequest, pk: int) -> HttpResponse:
     return HttpResponseRedirect(
         request.META.get(
             "HTTP_REFERER",
-            reverse_lazy("media:cartoon-list")
+            reverse_lazy("cartoons-list")
         )
     )

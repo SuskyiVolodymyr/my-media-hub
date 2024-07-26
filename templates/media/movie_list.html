@@ -37,7 +37,7 @@
       {% for movie in movie_list %}
         <tr>
           <th>
-            <a href="{% url 'media:movie-detail' pk=movie.id %}">{{ movie.title }}</a>
+            <a href="{% url 'media:movies-detail' pk=movie.id %}">{{ movie.title }}</a>
           </th>
           <th>
             {{ movie.average_rate|floatformat:2|default_if_none:"N/A" }}
@@ -53,9 +53,9 @@
           </th>
           <th>
             {% if movie in user_movies %}
-              <a href="{% url 'media:movie-add' pk=movie.id %}">Remove from list</a>
+              <a href="{% url 'media:movies-add' pk=movie.id %}">Remove from list</a>
             {% else %}
-              <a href="{% url 'media:movie-add' pk=movie.id %}">Add to list</a>
+              <a href="{% url 'media:movies-add' pk=movie.id %}">Add to list</a>
             {% endif %}
           </th>
         </tr>
@@ -64,5 +64,5 @@
   </table>
 {% endblock %}
 {% block content-after %}
-  <h3><a href="{% url "media:movie-create" %}" class="create-media">Can't find movie? Click here to create new one</a></h3>
+  <h3><a href="{% url "media:movies-create" %}" class="create-media">Can't find movie? Click here to create new one</a></h3>
 {% endblock %}

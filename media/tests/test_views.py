@@ -27,7 +27,7 @@ class TestUserMediaListView(TestBaseSetUp):
     def setUp(self):
         super().setUp()
         self.client.force_login(self.user)
-        self.user_movie_url = reverse("media:user-movie-list")
+        self.user_movie_url = reverse("user-movies-list")
 
     def test_user_media_search_form(self):
         res = self.client.get(self.user_movie_url, {"title": "1"})
@@ -72,7 +72,7 @@ class MediaListView(TestBaseSetUp):
     def setUp(self):
         super().setUp()
         self.client.force_login(self.user)
-        self.movie_list_url = reverse("media:movie-list")
+        self.movie_list_url = reverse("movies-list")
         self.new_genre1 = Genre.objects.create(name="Test_genre1")
         self.new_genre2 = Genre.objects.create(name="Test_genre2")
         for i in range(1, 6):
@@ -158,10 +158,10 @@ class MediaListView(TestBaseSetUp):
         self.assertEqual(len(res.context["object_list"]), 2)
 
     def test_add_media_to_user_list(self):
-        self.client.get(reverse("media:movie-add", kwargs={"pk": 1}))
+        self.client.get(reverse("movies-add", kwargs={"pk": 1}))
         movie = Movie.objects.get(id=1)
         self.assertNotIn(self.user, movie.user.all())
-        self.client.get(reverse("media:movie-add", kwargs={"pk": 1}))
+        self.client.get(reverse("movies-add", kwargs={"pk": 1}))
         self.assertIn(self.user, movie.user.all())
 
 

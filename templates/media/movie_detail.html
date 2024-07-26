@@ -2,8 +2,8 @@
 {% block content %}
   <h1>{{ movie.title }}
   <br>
-  <a href="{% url 'media:movie-update' pk=movie.id %}" class="btn btn-info">Update</a>
-  <a href="{% url 'media:movie-delete' pk=movie.id %}" class="btn btn-danger">Delete</a>
+  <a href="{% url 'media:movies-update' pk=movie.id %}" class="btn btn-info">Update</a>
+  <a href="{% url 'media:movies-delete' pk=movie.id %}" class="btn btn-danger">Delete</a>
   </h1>
   <p>Year of release: {{ movie.year_released }}</p>
   <p>Rate: {{ movie.avg_rate }}</p>
