@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Cartoons
+    <a href="{% url 'media:cartoons-list' %}" class="btn btn-secondary">Add new cartoons</a>
+  </h1>
+  <form method="get" action="">
+    {{ search_form.as_p }}
+    <label for="{{ show_only_form.show_only.id_for_label }}">Show only</label>
+    {{ show_only_form.show_only }}
+    <br>
+    <input type="submit" value="🔍" class="btn btn-secondary">
+  </form>
+  <table class="media-table">
+    <tr class="media-table-header">
+      <th>
+        Title
+      </th>
+      <th>
+        Rate
+      </th>
+      <th>
+        Status
+      </th>
+      <th>
+        Comment
+      </th>
+      <th>
+        Update
+      </th>
+      <th>
+        Remove
+      </th>
+    </tr>
+    {% if usercartoondata_list %}
+      {% for cartoon_data in usercartoondata_list %}
+        <tr>
+          <th>
+            <a href="{% url 'media:cartoons-detail' pk=cartoon_data.cartoon.id %}">{{ cartoon_data.cartoon.title }}</a>
+          </th>
+          <th>
+            {% if cartoon_data.rate %}
+              {{ cartoon_data.rate }}
+            {% endif %}
+          </th>
+          <th>
+            {{ cartoon_data.get_status_display }}
+          </th>
+          <th>
+            {% if cartoon_data.comment %}{{ cartoon_data.comment }}{% else %}{% endif %}
+          </th>
+          <th>
+            <a href="{% url 'media:user-cartoons-data-update' pk=cartoon_data.cartoon.id %}">Update</a>
+          </th>
+          <th>
+            <a href="{% url 'media:cartoons-add' pk=cartoon_data.cartoon.id %}">Remove</a>
+          </th>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
+{% endblock %}

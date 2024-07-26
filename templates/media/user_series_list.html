@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Series
+    <a href="{% url 'media:series-list' %}"  class="btn btn-secondary">Add new series</a>
+  </h1>
+  <form method="get" action="">
+    {{ search_form.as_p }}
+    <label for="{{ show_only_form.show_only.id_for_label }}">Show only</label>
+    {{ show_only_form.show_only }}
+    <br>
+    <input type="submit" value="🔍" class="btn btn-secondary">
+  </form>
+  <table class="media-table">
+    <tr class="media-table-header">
+      <th>
+        Title
+      </th>
+      <th>
+        Rate
+      </th>
+      <th>
+        Status
+      </th>
+      <th>
+        Comment
+      </th>
+      <th>
+        Update
+      </th>
+      <th>
+        Remove
+      </th>
+    </tr>
+    {% if userseriesdata_list %}
+      {% for series_data in userseriesdata_list %}
+        <tr>
+          <th>
+            <a href="{% url 'media:series-detail' pk=series_data.series.id %}">{{ series_data.series.title }}</a>
+          </th>
+          <th>
+            {% if series_data.rate %}
+              {{ series_data.rate }}
+            {% endif %}
+          </th>
+          <th>
+            {{ series_data.get_status_display }}
+          </th>
+          <th>
+            {% if series_data.comment %}{{ series_data.comment }}{% else %}{% endif %}
+          </th>
+          <th>
+            <a href="{% url 'media:user-series-data-update' pk=series_data.series.id %}">Update</a>
+          </th>
+          <th>
+            <a href="{% url 'media:series-add' pk=series_data.series.id %}">Remove</a>
+          </th>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load query_transform %}
+{% block content %}
+  <h1>Cartoons</h1>
+  <form method="get" action="">
+    {{ search_form.as_p }}
+    <label for="{{ order_form.order.id_for_label }}">Sort by</label>
+    {{ order_form.order }}
+    <br>
+    <details>
+      <summary class="order-summary">Filter by Genre</summary>
+      <div class="genres-columns">
+        {{ filter_form.as_p }}
+      </div>
+    </details>
+    <input type="submit" value="🔍" class="btn btn-secondary">
+  </form>
+  <table class="media-table">
+    <tr class="media-table-header">
+      <th>
+        Title
+      </th>
+      <th>
+        Rate
+      </th>
+      <th>
+        Genres
+      </th>
+      <th>
+        Seasons
+      </th>
+      <th>
+        Episodes
+      </th>
+      <th>
+        Year of release
+      </th>
+      <th>
+        Add/Delete
+      </th>
+    </tr>
+    {% if cartoon_list %}
+      {% for cartoon in cartoon_list %}
+        <tr>
+          <th>
+            <a href="{% url 'media:cartoons-detail' pk=cartoon.id %}">{{ cartoon.title }}</a>
+          </th>
+          <th>
+            {{ cartoon.average_rate|floatformat:2|default_if_none:"N/A" }}
+          </th>
+          <th>
+            {% for genre in cartoon.genre.all %}
+              {{ genre }}
+            {% empty %}
+            {% endfor %}
+          </th>
+          <th>
+            {{ cartoon.seasons }}
+          </th>
+          <th>
+            {{ cartoon.episodes }}
+          </th>
+          <th>
+            {{ cartoon.year_released }}
+          </th>
+          <th>
+            {% if cartoon in user_cartoon %}
+              <a href="{% url 'media:cartoons-add' pk=cartoon.id %}">Remove from list</a>
+            {% else %}
+              <a href="{% url 'media:cartoons-add' pk=cartoon.id %}">Add to list</a>
+            {% endif %}
+          </th>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
+{% endblock %}
+{% block content-after %}
+  <h3><a href="{% url "media:cartoons-create" %}" class="create-media">Can't find cartoon? Click here to create new one</a></h3>
+{% endblock %}
