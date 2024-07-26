@@ -48,6 +48,12 @@ Run the development server:
 ```
 python manage.py runserver
 ```
+You also need some environment variables (example in .env.template): 
+```
+DATABASE_URL="..."  # if you want to use another database
+DJANGO_DEBUG=False  # to disable djungo debug
+DJANGO_SECRET_KEY=... 
+```
 Access the application:
 Open your browser and go to http://localhost:8000.
 
