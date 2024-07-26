@@ -172,7 +172,7 @@ class UserCartoonListView(UserMediaListView):
         return queryset.filter(cartoon__title__icontains=filter_by)
 
 
-class MediaListView(generic.ListView, LoginRequiredMixin, ABC):
+class MediaListView(LoginRequiredMixin, generic.ListView, ABC):
     model = None
     paginate_by = 50
     order_form = None
@@ -271,59 +271,23 @@ class CartoonListView(MediaListView):
         return queryset.annotate(average_rate=Avg("usercartoondata__rate"))
 
 
-class MovieDetailView(generic.DetailView, LoginRequiredMixin):
+class MovieDetailView(LoginRequiredMixin, generic.DetailView):
     model = Movie
 
 
-class AnimeDetailView(generic.DetailView, LoginRequiredMixin):
+class AnimeDetailView(LoginRequiredMixin, generic.DetailView):
     model = Anime
 
 
-class SeriesDetailView(generic.DetailView, LoginRequiredMixin):
+class SeriesDetailView(LoginRequiredMixin, generic.DetailView):
     model = Series
 
 
-class CartoonDetailView(generic.DetailView, LoginRequiredMixin):
+class CartoonDetailView(LoginRequiredMixin, generic.DetailView):
     model = Cartoon
 
 
-class MovieUpdateView(generic.UpdateView, LoginRequiredMixin):
-    model = Movie
-    form_class = MovieForm
-
-    def get_success_url(self):
-        movie_id = self.object.id
-        return reverse_lazy("media:movie-detail", kwargs={"pk": movie_id})
-
-
-class AnimeUpdateView(generic.UpdateView, LoginRequiredMixin):
-    model = Anime
-    form_class = AnimeForm
-
-    def get_success_url(self):
-        anime_id = self.object.id
-        return reverse_lazy("media:anime-detail", kwargs={"pk": anime_id})
-
-
-class SeriesUpdateView(generic.UpdateView, LoginRequiredMixin):
-    model = Series
-    form_class = SeriesForm
-
-    def get_success_url(self):
-        series_id = self.object.id
-        return reverse_lazy("media:series-detail", kwargs={"pk": series_id})
-
-
-class CartoonUpdateView(generic.UpdateView, LoginRequiredMixin):
-    model = Cartoon
-    form_class = CartoonForm
-
-    def get_success_url(self):
-        cartoon_id = self.object.id
-        return reverse_lazy("media:cartoon-detail", kwargs={"pk": cartoon_id})
-
-
-class MovieCreateView(generic.CreateView, LoginRequiredMixin):
+class MovieUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Movie
     form_class = MovieForm
 
@@ -332,7 +296,7 @@ class MovieCreateView(generic.CreateView, LoginRequiredMixin):
         return reverse_lazy("media:movie-detail", kwargs={"pk": movie_id})
 
 
-class AnimeCreateView(generic.CreateView, LoginRequiredMixin):
+class AnimeUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Anime
     form_class = AnimeForm
 
@@ -341,7 +305,7 @@ class AnimeCreateView(generic.CreateView, LoginRequiredMixin):
         return reverse_lazy("media:anime-detail", kwargs={"pk": anime_id})
 
 
-class SeriesCreateView(generic.CreateView, LoginRequiredMixin):
+class SeriesUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Series
     form_class = SeriesForm
 
@@ -350,7 +314,7 @@ class SeriesCreateView(generic.CreateView, LoginRequiredMixin):
         return reverse_lazy("media:series-detail", kwargs={"pk": series_id})
 
 
-class CartoonCreateView(generic.CreateView, LoginRequiredMixin):
+class CartoonUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Cartoon
     form_class = CartoonForm
 
@@ -359,22 +323,58 @@ class CartoonCreateView(generic.CreateView, LoginRequiredMixin):
         return reverse_lazy("media:cartoon-detail", kwargs={"pk": cartoon_id})
 
 
-class MovieDeleteView(generic.DeleteView, LoginRequiredMixin):
+class MovieCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Movie
+    form_class = MovieForm
+
+    def get_success_url(self):
+        movie_id = self.object.id
+        return reverse_lazy("media:movie-detail", kwargs={"pk": movie_id})
+
+
+class AnimeCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Anime
+    form_class = AnimeForm
+
+    def get_success_url(self):
+        anime_id = self.object.id
+        return reverse_lazy("media:anime-detail", kwargs={"pk": anime_id})
+
+
+class SeriesCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Series
+    form_class = SeriesForm
+
+    def get_success_url(self):
+        series_id = self.object.id
+        return reverse_lazy("media:series-detail", kwargs={"pk": series_id})
+
+
+class CartoonCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Cartoon
+    form_class = CartoonForm
+
+    def get_success_url(self):
+        cartoon_id = self.object.id
+        return reverse_lazy("media:cartoon-detail", kwargs={"pk": cartoon_id})
+
+
+class MovieDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Movie
     success_url = reverse_lazy("media:movie-list")
 
 
-class AnimeDeleteView(generic.DeleteView, LoginRequiredMixin):
+class AnimeDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Anime
     success_url = reverse_lazy("media:anime-list")
 
 
-class SeriesDeleteView(generic.DeleteView, LoginRequiredMixin):
+class SeriesDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Series
     success_url = reverse_lazy("media:series-list")
 
 
-class CartoonDeleteView(generic.DeleteView, LoginRequiredMixin):
+class CartoonDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Cartoon
     success_url = reverse_lazy("media:cartoon-list")
 
