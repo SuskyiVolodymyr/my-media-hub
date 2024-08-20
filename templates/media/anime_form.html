@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>
+    {{ object|yesno:"Update,Create" }} anime
+    {% if object %}
+      <br>"{{ anime.title }}"
+    {% endif %}
+  </h1>
+  <form action="" method="post" novalidate>
+    {% csrf_token %}
+    <label for="{{ form.title.id_for_label }}">Title</label>
+    {{ form.title }}
+    <br>
+    <label for="{{ form.year_released.id_for_label }}">Year released</label>
+    {{ form.year_released }}
+    <br>
+    <label for="{{ form.description.id_for_label }}">Description</label>
+    {{ form.description }}
+    <br>
+    <label for="{{ form.seasons.id_for_label }}">Seasons</label>
+    {{ form.seasons }}
+    <br>
+    <label for="{{ form.episodes.id_for_label }}">Episodes</label>
+    {{ form.episodes }}
+    <br>
+    <details>
+      <summary class="order-summary">Genres</summary>
+      <div class="genres-columns">
+        {{ form.genre }}
+      </div>
+    </details>
+    <input type="submit" value="Submit" class="btn btn-primary">
+  </form>
+  {% if form.errors %}
+    <ul>
+      {% for field in form %}
+        {% for error in field.errors %}
+          <li>{{ field.label }}: {{ error }}</li>
+        {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load query_transform %}
+{% block content %}
+  <h1>Movies</h1>
+  <form method="get" action="">
+    {{ search_form.as_p }}
+    <label for="{{ order_form.order.id_for_label }}">Sort by</label>
+    {{ order_form.order }}
+    <br>
+    <details>
+      <summary class="order-summary">Filter by Genre</summary>
+      <div class="genres-columns">
+        {{ filter_form.as_p }}
+      </div>
+    </details>
+    <input type="submit" value="🔍" class="btn btn-secondary">
+  </form>
+  <table class="media-table">
+    <tr class="media-table-header">
+      <th>
+        Title
+      </th>
+      <th>
+        Rate
+      </th>
+      <th>
+        Genres
+      </th>
+      <th>
+        Year of release
+      </th>
+      <th>
+        Add/Delete
+      </th>
+    </tr>
+    {% if movie_list %}
+      {% for movie in movie_list %}
+        <tr>
+          <th>
+            <a href="{% url 'media:movies-detail' pk=movie.id %}">{{ movie.title }}</a>
+          </th>
+          <th>
+            {{ movie.average_rate|floatformat:2|default_if_none:"N/A" }}
+          </th>
+          <th>
+            {% for genre in movie.genre.all  %}
+            {{ genre }}
+            {% empty %}
+            {% endfor %}
+          </th>
+          <th>
+            {{ movie.year_released }}
+          </th>
+          <th>
+            {% if movie in user_movies %}
+              <a href="{% url 'media:movies-add' pk=movie.id %}">Remove from list</a>
+            {% else %}
+              <a href="{% url 'media:movies-add' pk=movie.id %}">Add to list</a>
+            {% endif %}
+          </th>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
+{% endblock %}
+{% block content-after %}
+  <h3><a href="{% url "media:movies-create" %}" class="create-media">Can't find movie? Click here to create new one</a></h3>
+{% endblock %}

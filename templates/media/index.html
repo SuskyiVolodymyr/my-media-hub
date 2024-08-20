@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>My Media Hub</h1>
+  <h3>You have:</h3>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-2 media-count">
+        <p>Movies:<br> {{ movies }}</p>
+      </div>
+      <div class="col-sm-2 media-count">
+        <p>Anime:<br> {{ anime }}</p>
+      </div>
+      <div class="col-sm-2 media-count">
+        <p>Series:<br> {{ series }}</p>
+      </div>
+      <div class="col-sm-2 media-count">
+        <p>Cartoons:<br> {{ cartoons }}</p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

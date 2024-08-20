@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Movies
+    <a href="{% url 'media:movies-list' %}" class="btn btn-secondary">Add new movies</a>
+  </h1>
+  <form method="get" action="">
+    {{ search_form.as_p }}
+    <label for="{{ show_only_form.show_only.id_for_label }}">Show only</label>
+    {{ show_only_form.show_only }}
+    <br>
+    <input type="submit" value="🔍" class="btn btn-secondary">
+  </form>
+  <table class="media-table">
+    <tr class="media-table-header">
+      <th>
+        Title
+      </th>
+      <th>
+        Rate
+      </th>
+      <th>
+        Status
+      </th>
+      <th>
+        Comment
+      </th>
+      <th>
+        Update
+      </th>
+      <th>
+        Remove
+      </th>
+    </tr>
+    {% if usermoviedata_list %}
+      {% for movie_data in usermoviedata_list %}
+        <tr>
+          <th>
+            <a href="{% url 'media:movies-detail' pk=movie_data.movie.id %}">{{ movie_data.movie.title }}</a>
+          </th>
+          <th>
+            {% if movie_data.rate %}
+              {{ movie_data.rate }}
+            {% endif %}
+          </th>
+          <th>
+            {{ movie_data.get_status_display }}
+          </th>
+          <th>
+            {% if movie_data.comment %}{{ movie_data.comment }}{% else %}{% endif %}
+          </th>
+          <th>
+            <a href="{% url 'media:user-movies-data-update' pk=movie_data.movie.id %}">Update</a>
+          </th>
+          <th>
+            <a href="{% url 'media:movies-add' pk=movie_data.movie.id %}">Remove</a>
+          </th>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
+{% endblock %}

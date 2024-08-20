@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{ series.title }}
+  <br>
+  <a href="{% url 'media:series-update' pk=series.id %}" class="btn btn-info">Update</a>
+  <a href="{% url 'media:series-delete' pk=series.id %}" class="btn btn-danger">Delete</a>
+  </h1>
+  <p>Year of release: {{ series.year_released }}</p>
+  <p>Rate: {{ series.avg_rate }}</p>
+  <p>Genres: 
+    {% for genre in series.genre.all %}
+      {{ genre }}
+    {% endfor %}
+  </p>
+  <p>Seasons: {{ series.seasons }}</p>
+  <p>Episodes: {{ series.episodes }}</p>
+  <p>Description: 
+    {% if series.description %}
+      {{ series.description }}</p>
+    {% else %}
+      No description
+    {% endif %}
+  
+{% endblock %}
